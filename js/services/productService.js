@@ -193,9 +193,19 @@ var ProductService = (function () {
             return toList(await Api.get("/seller/me/products")).map(normalizeOwn);
         },
 
-        /** Soft delete: the server sets is_active = false. Nothing is erased. */
+        /** Create: POST /v1/products. Body is ProductRequest. */
+        create: async function (payload) {
+            return Api.post("/products", payload);
+        },
+
+        /** Edit: PUT /v1/products/{id}. Body is ProductRequest. */
+        update: async function (productId, payload) {
+            return Api.put(productPath(productId), payload);
+        },
+
+        /** Soft delete: DELETE /v1/products/{id}. The server sets is_active = false. */
         deactivate: async function (productId) {
-            return Api.delete(productPath(productId));
+            return Api.del(productPath(productId));
         }
     };
 })();

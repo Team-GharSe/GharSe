@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product - Artisan Studio</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/components.css">
+    <link rel="stylesheet" href="../../css/responsive.css">
+    <style>
+        .product-form { display: grid; gap: 18px; max-width: 680px; margin-top: 20px; }
+        .field { display: grid; gap: 6px; border: 0; padding: 0; margin: 0; }
+        .field label, .field legend { font-weight: 600; padding: 0; }
+        .field-error { color: #b42318; font-size: 0.85rem; }
+        .field-error:empty { display: none; }
+        .field .form-control[aria-invalid="true"] { border-color: #b42318; }
+        .choice { display: flex; gap: 8px; align-items: center; font-weight: 400; }
+        .sub-row { display: grid; gap: 6px; padding-left: 12px; border-left: 3px solid var(--color-border, #d9d4cc); }
+        .form-alert { margin-top: 16px; padding: 12px 14px; border-radius: 8px; background: #fdecea; color: #7a1d14; }
+        .form-alert[hidden] { display: none; }
+        .photo-note { padding: 14px; border-radius: 8px; background: #f7f4ef; color: var(--color-text-muted, #6b6b6b); }
+        .form-actions { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+    </style>
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="dashboard.html" class="brand">
+                <span class="brand-mark">A</span>
+                <span class="brand-name">Artisan Studio</span>
+            </a>
+            <nav class="main-nav" aria-label="Main navigation"></nav>
+        </div>
+    </header>
+
+    <main class="section">
+        <div class="container">
+            <a href="products.html" class="text-link back-link">&larr; Back to my products</a>
+            <h1 id="formTitle" style="font-size: 1.8rem; margin-top: 12px;">Add product</h1>
+
+            <div id="formAlert" class="form-alert" role="alert" hidden></div>
+
+            <form id="productForm" class="product-form" novalidate>
+
+                <div class="field">
+                    <label for="name">Product name</label>
+                    <input id="name" name="name" class="form-control" type="text" maxlength="150" autocomplete="off">
+                    <span class="field-error" data-error-for="name"></span>
+                </div>
+
+                <div class="field">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" class="form-control" rows="5" maxlength="5000"></textarea>
+                    <span class="field-error" data-error-for="description"></span>
+                </div>
+
+                <div class="field">
+                    <label for="price">Price (&#8377;)</label>
+                    <input id="price" name="price" class="form-control" type="number" min="0.01" step="0.01" inputmode="decimal">
+                    <span class="field-error" data-error-for="price"></span>
+                </div>
+
+                <div class="field">
+                    <label for="categoryId">Category</label>
+                    <select id="categoryId" name="categoryId" class="form-control">
+                        <option value="">Loading categories...</option>
+                    </select>
+                    <span class="field-error" data-error-for="categoryId"></span>
+                </div>
+
+                <fieldset class="field">
+                    <legend>How is it fulfilled?</legend>
+                    <label class="choice">
+                        <input type="radio" name="fulfilmentType" value="READY_STOCK">
+                        Ready stock (I keep items in stock)
+                    </label>
+                    <label class="choice">
+                        <input type="radio" name="fulfilmentType" value="MADE_TO_ORDER">
+                        Made to order (I make it after the order)
+                    </label>
+                    <span class="field-error" data-error-for="fulfilmentType"></span>
+                </fieldset>
+
+                <div class="field sub-row" id="readyStockRow" hidden>
+                    <label for="inventoryQty">Items in stock</label>
+                    <input id="inventoryQty" name="inventoryQty" class="form-control" type="number" min="0" step="1" inputmode="numeric">
+                    <span class="field-error" data-error-for="inventoryQty"></span>
+                </div>
+
+                <div class="field sub-row" id="madeToOrderRow" hidden>
+                    <label for="productionTimeMinutesPerUnit">Minutes to make one item</label>
+                    <input id="productionTimeMinutesPerUnit" name="productionTimeMinutesPerUnit" class="form-control" type="number" min="1" step="1" inputmode="numeric">
+                    <span class="field-error" data-error-for="productionTimeMinutesPerUnit"></span>
+                </div>
+
+                <fieldset class="field">
+                    <legend>How can buyers get it?</legend>
+                    <label class="choice">
+                        <input type="checkbox" id="supportsSelfDelivery" name="supportsSelfDelivery">
+                        I deliver it myself
+                    </label>
+                    <div class="field sub-row" id="radiusRow" hidden>
+                        <label for="deliveryRadiusKm">Delivery radius (km)</label>
+                        <input id="deliveryRadiusKm" name="deliveryRadiusKm" class="form-control" type="number" min="0.1" step="0.1" inputmode="decimal">
+                        <span class="field-error" data-error-for="deliveryRadiusKm"></span>
+                    </div>
+                    <label class="choice">
+                        <input type="checkbox" id="supportsPickup" name="supportsPickup">
+                        Buyers can pick it up from me
+                    </label>
+                    <label class="choice">
+                        <input type="checkbox" id="supportsPostal" name="supportsPostal">
+                        I send it by post
+                    </label>
+                </fieldset>
+
+                <div class="field">
+                    <span style="font-weight: 600;">Photos</span>
+                    <div class="photo-note">
+                        Photo upload is coming soon. Save the product now and add photos once uploads are live.
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" id="submitBtn" class="btn btn-primary btn-large">Save product</button>
+                    <a href="products.html" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script src="../../js/config.js"></script>
+    <script src="../../js/core/utils.js"></script>
+    <script src="../../js/api.js"></script>
+    <script src="../../js/auth.js"></script>
+    <script src="../../js/services/productService.js"></script>
+    <script src="../../js/toast.js"></script>
+    <script src="../../js/nav.js"></script>
+    <script src="../../js/pages/seller/seller-guard.js"></script>
+    <script src="../../js/pages/seller/product-form.js"></script>
+</body>
+</html>
