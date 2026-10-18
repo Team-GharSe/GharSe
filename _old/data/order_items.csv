@@ -1,8 +1,0 @@
-"id","orderId","productId","sellerId","productName","category","price","quantity","subtotal"
-"ori_0001","ord_0001","prd_015","sel_06","Whole Wheat Sourdough Loaf","Baked Goods","299","1","299"
-"ori_0002","ord_0002","prd_006","sel_02","Coconut Chutney Powder","Food","179","1","179"
-"ori_0003","ord_0003","prd_035","sel_14","South Indian Filter Coffee Powder","Food","349","1","349"
-"ori_0004","ord_0003","prd_027","sel_10","Block-Printed Cotton Dupatta","Clothing","749","2","1498"
-"ori_0005","ord_0004","prd_010","sel_04","Chikankari Embroidered Kurta","Clothing","1899","1","1899"
-
-[... Truncated for context saving: showing first 6 rows out of 150 total rows ...]

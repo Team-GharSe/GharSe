@@ -1,8 +1,0 @@
-"id","sellerId","name","category","price","stock","description","image","createdAt"
-"prd_001","sel_01","Handwoven Cotton Shawl","Clothing","1299","14","Soft handwoven shawl made from organic cotton on a traditional pit loom.","assets/products/default-clothing.jpg","2025-02-03"
-"prd_002","sel_01","Block-Printed Table Runner","Home & Decor","649","22","Hand block-printed cotton table runner with a floral motif.","assets/products/default-home-and-decor.jpg","2025-02-05"
-"prd_003","sel_01","Rajasthani Cushion Cover Set","Home & Decor","899","18","Set of two cushion covers featuring traditional Rajasthani mirror work.","assets/products/default-home-and-decor.jpg","2025-02-07"
-"prd_004","sel_02","Homemade Mango Pickle","Food","249","40","Tangy raw mango pickle made in small batches using a family recipe, no preservatives.","assets/products/default-food.jpg","2025-02-09"
-"prd_005","sel_02","Kerala Spice Box","Food","499","25","A curated box of seven essential South Indian spice blends.","assets/products/default-food.jpg","2025-02-11"
-
-[... Truncated for context saving: showing first 6 rows out of 45 total rows ...]
