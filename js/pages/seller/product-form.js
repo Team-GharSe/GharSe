@@ -1,8 +1,9 @@
 /**
- * GharSe - Seller product form (create and edit).
+ * GharSe - Seller product form (create, edit, photos).
  *
- * Create: POST /v1/products
- * Edit:   PUT  /v1/products/{id}   (the product is read from GET /v1/seller/me/products)
+ * Create: POST /v1/products. On success the page moves to edit mode so photos can be added.
+ * Edit:   PUT  /v1/products/{id}. The product is read from GET /v1/seller/me/products.
+ * Photos: POST /v1/products/{id}/photos and DELETE /v1/products/{id}/photos/{imageId}.
  * Categories: GET /v1/categories via ProductService.getCategories().
  *
  * The three true/false fields are always sent. Fulfilment fields are sent only
@@ -16,21 +17,29 @@ var ProductFormPage = {
 
     editId: null,
     product: null,
+    photos: [],
     saving: false,
+    uploading: false,
     form: null,
 
     init: async function () {
         this.form = document.getElementById("productForm");
         if (!this.form) return;
 
-        this.editId = new URLSearchParams(window.location.search).get("id");
+        var params = new URLSearchParams(window.location.search);
+        this.editId = params.get("id");
+
         this.bindEvents();
         this.toggleFulfilment();
         this.toggleDelivery();
+        this.renderPhotos();
 
         await this.loadCategories();
         if (this.editId) {
             await this.loadProduct(this.editId);
+        }
+        if (params.get("saved") === "1") {
+            notify("Product saved. You can add photos now.", "success");
         }
     },
 
@@ -56,6 +65,18 @@ var ProductFormPage = {
         });
         page.form.addEventListener("change", function (event) {
             page.clearFieldError(event.target.name);
+        });
+
+        // Photos
+        document.getElementById("photoInput").addEventListener("change", function (event) {
+            page.addPhotos(event.target.files);
+            event.target.value = "";
+        });
+
+        document.getElementById("photoGrid").addEventListener("click", function (event) {
+            var btn = event.target.closest ? event.target.closest("[data-remove-photo]") : null;
+            if (!btn) return;
+            page.removePhoto(btn.getAttribute("data-remove-photo"));
         });
     },
 
@@ -118,6 +139,8 @@ var ProductFormPage = {
 
         this.toggleFulfilment();
         this.toggleDelivery();
+        this.photos = p.photos || [];
+        this.renderPhotos();
     },
 
     // ---------------------------------------------------------------
@@ -141,6 +164,99 @@ var ProductFormPage = {
     selectedFulfilment: function () {
         var checked = this.radios().filter(function (r) { return r.checked; })[0];
         return checked ? checked.value : "";
+    },
+
+    // ---------------------------------------------------------------
+    // Photos
+    // ---------------------------------------------------------------
+
+    MAX_PHOTOS: 3,
+    MAX_PHOTO_BYTES: 5 * 1024 * 1024,
+    PHOTO_TYPES: ["image/jpeg", "image/png", "image/webp"],
+
+    renderPhotos: function () {
+        var hasProduct = !!this.editId && !!this.product;
+        var grid = document.getElementById("photoGrid");
+        var note = document.getElementById("photoNote");
+        var addLabel = document.getElementById("photoAddLabel");
+
+        note.hidden = hasProduct;
+        addLabel.hidden = !hasProduct;
+        addLabel.setAttribute("aria-disabled", this.uploading || this.photos.length >= this.MAX_PHOTOS ? "true" : "false");
+        document.getElementById("photoInput").disabled = this.uploading || this.photos.length >= this.MAX_PHOTOS;
+
+        if (!hasProduct) {
+            grid.innerHTML = "";
+            return;
+        }
+
+        if (this.photos.length === 0) {
+            grid.innerHTML = '<p style="color: var(--color-text-muted, #6b6b6b);">No photos yet.</p>';
+            return;
+        }
+
+        grid.innerHTML = this.photos.map(function (photo) {
+            return '<div class="photo-item">' +
+                '<img src="' + escapeAttr(photo.url) + '" alt="Product photo">' +
+                '<button type="button" data-remove-photo="' + escapeAttr(photo.id) + '">Remove</button>' +
+            '</div>';
+        }).join("");
+    },
+
+    setPhotoError: function (message) {
+        document.getElementById("photoError").textContent = message || "";
+    },
+
+    addPhotos: async function (fileList) {
+        if (!this.editId || !this.product || this.uploading) return;
+
+        var files = Array.prototype.slice.call(fileList || []);
+        if (files.length === 0) return;
+
+        if (this.photos.length + files.length > this.MAX_PHOTOS) {
+            this.setPhotoError("A product can have at most " + this.MAX_PHOTOS + " photos. You have " +
+                this.photos.length + " already.");
+            return;
+        }
+        for (var i = 0; i < files.length; i++) {
+            if (this.PHOTO_TYPES.indexOf(files[i].type) === -1) {
+                this.setPhotoError("Photos must be JPEG, PNG or WebP.");
+                return;
+            }
+            if (files[i].size > this.MAX_PHOTO_BYTES) {
+                this.setPhotoError("Each photo must be 5 MB or smaller.");
+                return;
+            }
+        }
+
+        this.setPhotoError("");
+        this.uploading = true;
+        this.renderPhotos();
+        try {
+            this.product = await ProductService.uploadPhotos(this.editId, files);
+            this.photos = this.product.photos || [];
+            notify("Photos added.", "success");
+        } catch (error) {
+            this.setPhotoError(error.message || "The photos could not be uploaded. Please try again.");
+        } finally {
+            this.uploading = false;
+            this.renderPhotos();
+        }
+    },
+
+    removePhoto: async function (photoId) {
+        if (!this.editId || !photoId || this.uploading) return;
+        if (!window.confirm("Remove this photo?")) return;
+
+        this.setPhotoError("");
+        try {
+            this.product = await ProductService.removePhoto(this.editId, photoId);
+            this.photos = this.product.photos || [];
+            notify("Photo removed.", "success");
+        } catch (error) {
+            this.setPhotoError(error.message || "The photo could not be removed. Please try again.");
+        }
+        this.renderPhotos();
     },
 
     // ---------------------------------------------------------------
@@ -218,10 +334,15 @@ var ProductFormPage = {
         try {
             if (this.editId) {
                 await ProductService.update(this.editId, payload);
+                window.location.href = "products.html";
             } else {
-                await ProductService.create(payload);
+                var created = await ProductService.create(payload);
+                var newId = created && created.id;
+                // Stay on the form in edit mode so photos can be added right away.
+                window.location.href = newId
+                    ? "product-form.html?id=" + encodeURIComponent(newId) + "&saved=1"
+                    : "products.html";
             }
-            window.location.href = "products.html";
         } catch (error) {
             this.setSaving(false);
             this.handleServerError(error);
@@ -368,6 +489,14 @@ function intOrNull(text) {
 
 function toCamel(name) {
     return String(name).replace(/_([a-z])/g, function (m, c) { return c.toUpperCase(); });
+}
+
+function notify(message, type) {
+    if (typeof showToast === "function") {
+        showToast(message, type);
+    } else {
+        window.alert(message);
+    }
 }
 
 document.addEventListener("DOMContentLoaded", function () {
