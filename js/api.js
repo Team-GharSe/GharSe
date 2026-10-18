@@ -34,21 +34,29 @@ var Api = {
         if (storedToken && !isAuthPath && Auth.isLoggedIn()) {
             headers["Authorization"] = "Bearer " + storedToken;
         }
-        // Content-Type only when there is a body. Plain GETs then stay "simple"
-        // requests and the browser skips the CORS preflight.
-        if (options.body) {
+        // Content-Type only for JSON bodies. Plain GETs stay "simple" requests and
+        // the browser skips the CORS preflight. Uploads set their own Content-Type
+        // (multipart boundary), so we must not set it here.
+        if (options.body && !options.formData) {
             headers["Content-Type"] = "application/json";
         }
 
         var controller = (typeof AbortController !== "undefined") ? new AbortController() : null;
         var timer = controller ? setTimeout(function () { controller.abort(); }, Api.TIMEOUT_MS) : null;
 
+        var requestBody = undefined;
+        if (options.formData) {
+            requestBody = options.formData;
+        } else if (options.body) {
+            requestBody = JSON.stringify(options.body);
+        }
+
         var response;
         try {
             response = await fetch(CONFIG.API_BASE_URL + path, {
                 method: options.method || "GET",
                 headers: headers,
-                body: options.body ? JSON.stringify(options.body) : undefined,
+                body: requestBody,
                 signal: controller ? controller.signal : undefined
             });
         } catch (e) {
@@ -77,11 +85,14 @@ var Api = {
         return json.data;
     },
 
-    get:   function (path, params) { return Api.request(path + Api.buildQuery(params)); },
-    post:  function (path, body)   { return Api.request(path, { method: "POST",   body: body }); },
-    put:   function (path, body)   { return Api.request(path, { method: "PUT",    body: body }); },
-    patch: function (path, body)   { return Api.request(path, { method: "PATCH",  body: body }); },
-    del:   function (path)         { return Api.request(path, { method: "DELETE" }); },
+    get:    function (path, params) { return Api.request(path + Api.buildQuery(params)); },
+    post:   function (path, body)   { return Api.request(path, { method: "POST",   body: body }); },
+    put:    function (path, body)   { return Api.request(path, { method: "PUT",    body: body }); },
+    patch:  function (path, body)   { return Api.request(path, { method: "PATCH",  body: body }); },
+    del:    function (path)         { return Api.request(path, { method: "DELETE" }); },
+
+    /** Multipart upload. formData is a FormData object (e.g. files appended under one name). */
+    upload: function (path, formData) { return Api.request(path, { method: "POST", formData: formData }); },
 
     _error: function (message, status, body) {
         var error = new Error(message);

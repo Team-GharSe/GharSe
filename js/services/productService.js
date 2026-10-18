@@ -3,14 +3,17 @@
  *
  * Wraps: GET /v1/products/search, /v1/products/{id}, /v1/products/{id}/eta,
  *        /v1/products/{id}/reviews, /v1/categories,
- *        GET /v1/seller/me/products, DELETE /v1/products/{id}.
+ *        GET /v1/seller/me/products, POST /v1/products, PUT /v1/products/{id},
+ *        DELETE /v1/products/{id}, POST /v1/products/{id}/photos,
+ *        DELETE /v1/products/{id}/photos/{imageId}.
  *
- * All knowledge of the backend's field names lives in this file. If the backend
- * names a field differently, fix it in the normalize* functions below and no
- * page needs to change. Each field is read by camelCase name first, then by its
- * snake_case twin (productId, then product_id).
+ * All knowledge of the backend's field names lives in this file. Each field is
+ * read by camelCase name first, then by its snake_case twin.
  *
- * Needs: js/api.js.
+ * Image URLs come back root-relative (/uploads/...). assetUrl() puts the backend
+ * origin in front, so photos load from the API server, not the frontend server.
+ *
+ * Needs: js/config.js, js/api.js.
  */
 var ProductService = (function () {
 
@@ -44,6 +47,36 @@ var ProductService = (function () {
         return [];
     }
 
+    /** Backend origin without the /v1 suffix, e.g. "http://localhost:8080". */
+    function apiOrigin() {
+        var base = (typeof CONFIG !== "undefined" && CONFIG.API_BASE_URL) ? CONFIG.API_BASE_URL : "";
+        return base.replace(/\/v1\/?$/, "").replace(/\/$/, "");
+    }
+
+    /** "/uploads/products/x.jpg" -> "http://localhost:8080/uploads/products/x.jpg". Absolute URLs pass through. */
+    function assetUrl(path) {
+        if (!path) return null;
+        if (/^https?:\/\//i.test(path)) return path;
+        return apiOrigin() + (path.charAt(0) === "/" ? path : "/" + path);
+    }
+
+    /** Photos as [{ id, url, displayOrder }]. Accepts objects or plain URL strings. */
+    function normalizePhotos(raw) {
+        var list = pick(raw, ["images"], []);
+        if (!Array.isArray(list)) return [];
+        return list.map(function (img, index) {
+            if (typeof img === "string") {
+                return { id: null, url: assetUrl(img), displayOrder: index };
+            }
+            return {
+                id: pick(img, ["id"], null),
+                url: assetUrl(pick(img, ["imageUrl", "url"], null)),
+                displayOrder: toNumber(pick(img, ["displayOrder"], index), index)
+            };
+        }).filter(function (p) { return !!p.url; })
+          .sort(function (a, b) { return a.displayOrder - b.displayOrder; });
+    }
+
     function normalizeSummary(raw) {
         return {
             id: pick(raw, ["productId", "id"], null),
@@ -55,7 +88,7 @@ var ProductService = (function () {
             sellerName: String(pick(raw, ["sellerName", "businessName"], "")),
             fulfilmentType: String(pick(raw, ["fulfilmentType"], "")),
             inStock: pick(raw, ["inStock"], true) !== false,
-            imageUrl: pick(raw, ["imageUrl", "primaryImageUrl"], null),
+            imageUrl: assetUrl(pick(raw, ["imageUrl", "primaryImageUrl"], null)),
             isVerified: pick(raw, ["isVerified", "verified"], false) === true,
             averageRating: toNumber(pick(raw, ["averageRating"], null), 0),
             reviewCount: toNumber(pick(raw, ["reviewCount"], null), 0),
@@ -65,21 +98,12 @@ var ProductService = (function () {
 
     function normalizeDetail(raw) {
         var product = normalizeSummary(raw);
+        var photos = normalizePhotos(raw);
 
-        var images = [];
-        var rawImages = pick(raw, ["images"], []);
-        if (Array.isArray(rawImages)) {
-            rawImages = rawImages.slice().sort(function (a, b) {
-                return toNumber(pick(a, ["displayOrder"], 0), 0) - toNumber(pick(b, ["displayOrder"], 0), 0);
-            });
-            rawImages.forEach(function (img) {
-                var url = (typeof img === "string") ? img : pick(img, ["imageUrl", "url"], null);
-                if (url) images.push(url);
-            });
-        }
-        if (images.length === 0 && product.imageUrl) images.push(product.imageUrl);
+        product.photos = photos;
+        product.images = photos.map(function (p) { return p.url; });
+        if (product.images.length === 0 && product.imageUrl) product.images.push(product.imageUrl);
 
-        product.images = images;
         product.description = String(pick(raw, ["description"], ""));
         product.supportsSelfDelivery = pick(raw, ["supportsSelfDelivery"], false) === true;
         product.supportsPickup = pick(raw, ["supportsPickup"], false) === true;
@@ -89,9 +113,13 @@ var ProductService = (function () {
         return product;
     }
 
-    /** Seller's own listing: adds the active flag and the stock/production fields the form needs. */
+    /** Seller's own listing: adds the active flag, stock/production fields and photos with ids. */
     function normalizeOwn(raw) {
         var product = normalizeSummary(raw);
+        var photos = normalizePhotos(raw);
+
+        product.photos = photos;
+        product.images = photos.map(function (p) { return p.url; });
         product.description = String(pick(raw, ["description"], ""));
         product.active = pick(raw, ["active"], true) !== false;
         product.inventoryQty = toNumber(pick(raw, ["inventoryQty"], null), null);
@@ -193,12 +221,12 @@ var ProductService = (function () {
             return toList(await Api.get("/seller/me/products")).map(normalizeOwn);
         },
 
-        /** Create: POST /v1/products. Body is ProductRequest. */
+        /** Create: POST /v1/products. Returns the raw ProductResponse (use .id). */
         create: async function (payload) {
             return Api.post("/products", payload);
         },
 
-        /** Edit: PUT /v1/products/{id}. Body is ProductRequest. */
+        /** Edit: PUT /v1/products/{id}. */
         update: async function (productId, payload) {
             return Api.put(productPath(productId), payload);
         },
@@ -206,6 +234,23 @@ var ProductService = (function () {
         /** Soft delete: DELETE /v1/products/{id}. The server sets is_active = false. */
         deactivate: async function (productId) {
             return Api.del(productPath(productId));
+        },
+
+        /**
+         * Upload photos: POST /v1/products/{id}/photos, multipart field "files".
+         * files: a FileList or array of File objects. Returns the updated product (normalized).
+         */
+        uploadPhotos: async function (productId, files) {
+            var form = new FormData();
+            Array.prototype.forEach.call(files, function (file) {
+                form.append("files", file);
+            });
+            return normalizeOwn(await Api.upload(productPath(productId) + "/photos", form));
+        },
+
+        /** Remove one photo: DELETE /v1/products/{id}/photos/{imageId}. Returns the updated product (normalized). */
+        removePhoto: async function (productId, photoId) {
+            return normalizeOwn(await Api.del(productPath(productId) + "/photos/" + encodeURIComponent(photoId)));
         }
     };
 })();
