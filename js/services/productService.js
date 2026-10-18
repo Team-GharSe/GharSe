@@ -2,14 +2,13 @@
  * GharSe - Product / catalog service.
  *
  * Wraps: GET /v1/products/search, /v1/products/{id}, /v1/products/{id}/eta,
- *        /v1/products/{id}/reviews, /v1/categories.
- * The expected response shapes are written down in docs/catalog-api-contract.md.
+ *        /v1/products/{id}/reviews, /v1/categories,
+ *        GET /v1/seller/me/products, DELETE /v1/products/{id}.
  *
  * All knowledge of the backend's field names lives in this file. If the backend
  * names a field differently, fix it in the normalize* functions below and no
  * page needs to change. Each field is read by camelCase name first, then by its
- * snake_case twin (productId, then product_id), because the IT doc shows
- * snake_case in places while the existing AuthResponse is camelCase.
+ * snake_case twin (productId, then product_id).
  *
  * Needs: js/api.js.
  */
@@ -87,6 +86,20 @@ var ProductService = (function () {
         product.supportsPostal = pick(raw, ["supportsPostal"], false) === true;
         product.deliveryRadiusKm = toNumber(pick(raw, ["deliveryRadiusKm"], null), null);
         product.productionTimeMinutesPerUnit = toNumber(pick(raw, ["productionTimeMinutesPerUnit"], null), null);
+        return product;
+    }
+
+    /** Seller's own listing: adds the active flag and the stock/production fields the form needs. */
+    function normalizeOwn(raw) {
+        var product = normalizeSummary(raw);
+        product.description = String(pick(raw, ["description"], ""));
+        product.active = pick(raw, ["active"], true) !== false;
+        product.inventoryQty = toNumber(pick(raw, ["inventoryQty"], null), null);
+        product.productionTimeMinutesPerUnit = toNumber(pick(raw, ["productionTimeMinutesPerUnit"], null), null);
+        product.supportsSelfDelivery = pick(raw, ["supportsSelfDelivery"], false) === true;
+        product.supportsPickup = pick(raw, ["supportsPickup"], false) === true;
+        product.supportsPostal = pick(raw, ["supportsPostal"], false) === true;
+        product.deliveryRadiusKm = toNumber(pick(raw, ["deliveryRadiusKm"], null), null);
         return product;
     }
 
@@ -173,6 +186,16 @@ var ProductService = (function () {
 
         getCategories: async function () {
             return toList(await Api.get("/categories")).map(normalizeCategory);
+        },
+
+        /** Seller's own listings, active and removed (includes is_active = false). */
+        getMine: async function () {
+            return toList(await Api.get("/seller/me/products")).map(normalizeOwn);
+        },
+
+        /** Soft delete: the server sets is_active = false. Nothing is erased. */
+        deactivate: async function (productId) {
+            return Api.delete(productPath(productId));
         }
     };
 })();
