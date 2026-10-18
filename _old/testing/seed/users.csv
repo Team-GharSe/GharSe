@@ -1,8 +1,0 @@
-"id","email","password","role","name","createdAt"
-"usr_sel_01","anita.sharma@example.com","password123","seller","Anita Sharma","2025-01-06"
-"usr_sel_02","meera.nair@example.com","password123","seller","Meera Nair","2025-01-11"
-"usr_sel_03","priya.desai@example.com","password123","seller","Priya Desai","2025-01-16"
-"usr_sel_04","fatima.khan@example.com","password123","seller","Fatima Khan","2025-01-21"
-"usr_sel_05","kavya.reddy@example.com","password123","seller","Kavya Reddy","2025-01-26"
-
-[... Truncated for context saving: showing first 6 rows out of 31 total rows ...]

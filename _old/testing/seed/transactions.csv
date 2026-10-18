@@ -1,8 +1,0 @@
-"id","orderId","buyerId","amount","paymentMethod","status","createdAt"
-"txn_0001","ord_0001","buy_11","299","UPI","Success","2025-06-23T09:47:00"
-"txn_0002","ord_0002","buy_11","179","Card","Success","2025-05-29T18:27:00"
-"txn_0003","ord_0003","buy_09","1847","Net Banking","Success","2025-03-28T17:12:00"
-"txn_0004","ord_0004","buy_01","1899","Net Banking","Success","2025-08-11T20:27:00"
-"txn_0005","ord_0005","buy_02","1047","Net Banking","Success","2025-06-03T15:06:00"
-
-[... Truncated for context saving: showing first 6 rows out of 101 total rows ...]
