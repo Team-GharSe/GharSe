@@ -1,18 +1,14 @@
 /**
- * GharSe - Navigation renderer (replaces js/nav/navigation.js).
+ * GharSe - Navigation renderer.
  *
  * Fills <nav class="main-nav"> with the right links for guest, buyer, seller
  * or admin, based on the role in the JWT (Auth.getRole()). The role only picks
  * which links are shown. The backend still enforces access on every request.
  *
- * Needs: js/auth.js loaded first.
+ * Only links to pages that exist are shown. When a page is built, add its link
+ * back here (marked "add back" below).
  *
- * Notes:
- *  - The "Hi, <name>" greeting is gone. The token carries only the user id and
- *    role, and GET /v1/users/me does not exist yet. Add it back from that
- *    endpoint once it does.
- *  - The cart badge stays hidden until the cart backend exists. Call
- *    Nav.setCartCount(n) when it does.
+ * Needs: js/auth.js loaded first.
  */
 
 var Nav = {
@@ -51,33 +47,29 @@ var Nav = {
             '<a href="' + root + 'pages/auth/signup.html?role=buyer" class="btn btn-secondary nav-cta">Become a Buyer</a>';
     },
 
+    // Add back when built: Cart (pages/marketplace/cart.html), Profile (pages/buyer/profile.html),
+    // My Orders (pages/buyer/orders.html). The cart badge is set with Nav.setCartCount(n).
     buyerLinks: function (root) {
         return '' +
             '<a href="' + root + 'index.html" class="nav-link">Home</a>' +
             '<a href="' + root + 'pages/marketplace/marketplace.html" class="nav-link">Explore</a>' +
-            '<a href="' + root + 'pages/marketplace/cart.html" class="nav-link nav-cart">' +
-                'Cart <span class="cart-badge" id="cartCount" style="display: none;">0</span>' +
-            '</a>' +
             '<div class="nav-profile-dropdown">' +
-                '<button class="nav-link nav-profile-trigger" id="navProfileTrigger" type="button">Profile</button>' +
+                '<button class="nav-link nav-profile-trigger" id="navProfileTrigger" type="button">Account</button>' +
                 '<div class="nav-profile-menu" id="navProfileMenu">' +
-                    '<a href="' + root + 'pages/buyer/profile.html" class="nav-profile-link">View Profile</a>' +
-                    '<a href="' + root + 'pages/buyer/orders.html" class="nav-profile-link">My Orders</a>' +
                     '<hr>' +
                     '<button class="nav-profile-link" onclick="Auth.logout()" type="button">Logout</button>' +
                 '</div>' +
             '</div>';
     },
 
+    // Add back when built: Analytics (pages/seller/analytics.html), Reports (pages/seller/reports.html).
     sellerLinks: function (root) {
         return '' +
             '<a href="' + root + 'index.html" class="nav-link">Home</a>' +
             '<a href="' + root + 'pages/seller/dashboard.html" class="nav-link">Dashboard</a>' +
             '<a href="' + root + 'pages/seller/products.html" class="nav-link">Products</a>' +
-            '<a href="' + root + 'pages/seller/analytics.html" class="nav-link">Analytics</a>' +
-            '<a href="' + root + 'pages/seller/reports.html" class="nav-link">Reports</a>' +
             '<div class="nav-profile-dropdown">' +
-                '<button class="nav-link nav-profile-trigger" id="navProfileTrigger" type="button">Profile</button>' +
+                '<button class="nav-link nav-profile-trigger" id="navProfileTrigger" type="button">Account</button>' +
                 '<div class="nav-profile-menu" id="navProfileMenu">' +
                     '<hr>' +
                     '<button class="nav-profile-link" onclick="Auth.logout()" type="button">Logout</button>' +
@@ -91,7 +83,7 @@ var Nav = {
             '<a href="' + root + 'index.html" class="nav-link">Home</a>' +
             '<a href="' + root + 'pages/marketplace/marketplace.html" class="nav-link">Explore</a>' +
             '<div class="nav-profile-dropdown">' +
-                '<button class="nav-link nav-profile-trigger" id="navProfileTrigger" type="button">Profile</button>' +
+                '<button class="nav-link nav-profile-trigger" id="navProfileTrigger" type="button">Account</button>' +
                 '<div class="nav-profile-menu" id="navProfileMenu">' +
                     '<button class="nav-profile-link" onclick="Auth.logout()" type="button">Logout</button>' +
                 '</div>' +
