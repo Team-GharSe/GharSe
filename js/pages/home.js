@@ -1,10 +1,12 @@
 /**
- * GharSe - Home page product sections.
+ * GharSe - Home page sections.
  *
- * Fills two grids on index.html from the public search endpoint:
- *   #homeTrendingGrid  sort "recommended" (verified first)
- *   #trendingProducts  sort "newest"
- * Shows a short message if there are no products or the request fails.
+ * Fills three areas on index.html from the backend:
+ *   #homeCategoryGrid  categories from GET /v1/categories, each linking to
+ *                      marketplace.html?category_id=<id>
+ *   #homeTrendingGrid  products, sort "recommended" (verified first)
+ *   #trendingProducts  products, sort "newest"
+ * Each area shows a short message if it has no data or the request fails.
  *
  * Needs (in this order): core/utils.js, config.js, api.js, auth.js,
  * services/productService.js, toast.js, nav.js.
@@ -12,8 +14,35 @@
 var HomePage = {
 
     init: function () {
+        this.fillCategories();
         this.fill("homeTrendingGrid", "recommended");
         this.fill("trendingProducts", "newest");
+    },
+
+    fillCategories: async function () {
+        var grid = document.getElementById("homeCategoryGrid");
+        if (!grid) return;
+
+        try {
+            var categories = await ProductService.getCategories();
+            grid.setAttribute("aria-busy", "false");
+            if (categories.length === 0) {
+                grid.innerHTML = '<p style="color: var(--color-text-muted);">Categories will appear here soon.</p>';
+                return;
+            }
+            grid.innerHTML = categories.map(this.categoryHTML, this).join("");
+        } catch (error) {
+            grid.setAttribute("aria-busy", "false");
+            grid.innerHTML = '<p style="color: var(--color-text-muted);">Categories are unavailable right now.</p>';
+        }
+    },
+
+    categoryHTML: function (c) {
+        var href = "pages/marketplace/marketplace.html?category_id=" + encodeURIComponent(c.id);
+        return '<a href="' + escapeAttr(href) + '" class="category-card">' +
+                   '<span class="category-icon" aria-hidden="true">&#10022;</span>' +
+                   '<span>' + escapeHTML(c.name) + '</span>' +
+               '</a>';
     },
 
     fill: async function (gridId, sort) {
