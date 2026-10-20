@@ -5,8 +5,10 @@
  * or admin, based on the role in the JWT (Auth.getRole()). The role only picks
  * which links are shown. The backend still enforces access on every request.
  *
- * For logged-in users the Account button shows "Hi, <first name>", fetched
- * from GET /v1/users/me. If that fails, it keeps the label "Account".
+ * For logged-in users the Account button shows a greeting:
+ *   buyers  -> "Hi, <first name>"     from GET /v1/users/me
+ *   sellers -> "<business name>"      from GET /v1/seller/me
+ * If the request fails, the label stays "Account".
  *
  * Needs: js/auth.js and js/api.js loaded first.
  */
@@ -125,18 +127,22 @@ var Nav = {
     },
 
     /**
-     * Replaces the "Account" label with "Hi, <first name>".
-     * Uses textContent, so the name is never parsed as HTML.
+     * Replaces the "Account" label with a greeting for the role.
+     * Uses textContent, so names are never parsed as HTML.
      * On failure the label stays "Account".
      */
-    setGreeting: async function (navEl) {
+    setGreeting: async function (navEl, role) {
         var trigger = navEl.querySelector("#navProfileTrigger");
         if (!trigger) return;
         try {
-            var user = await Api.get("/users/me");
-            var firstName = String(user.name || "").trim().split(/\s+/)[0];
-            if (firstName) {
-                trigger.textContent = "Hi, " + firstName;
+            if (role === "SELLER") {
+                var seller = await Api.get("/seller/me");
+                var businessName = String(seller.businessName || "").trim();
+                if (businessName) trigger.textContent = businessName;
+            } else {
+                var user = await Api.get("/users/me");
+                var firstName = String(user.name || "").trim().split(/\s+/)[0];
+                if (firstName) trigger.textContent = "Hi, " + firstName;
             }
         } catch (error) {
             // Keep "Account". Api already logs the user out if the token is rejected.
@@ -169,7 +175,7 @@ var Nav = {
             } else {
                 navEl.innerHTML = this.buyerLinks(root);
             }
-            this.setGreeting(navEl);
+            this.setGreeting(navEl, role);
         }
 
         this.hideCurrentPageLink(navEl);
