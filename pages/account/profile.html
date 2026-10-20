@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - Artisan</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/components.css">
+    <link rel="stylesheet" href="../../css/responsive.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="../../index.html" class="brand">
+                <span class="brand-mark">A</span>
+                <span class="brand-name">Artisan</span>
+            </a>
+            <nav class="main-nav" aria-label="Main navigation"></nav>
+            <button class="mobile-menu-button" id="mobileMenuButton" type="button" aria-label="Open navigation menu" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <main class="section">
+        <div class="container" style="max-width: 640px;">
+            <div class="section-heading">
+                <span class="eyebrow">Your account</span>
+                <h2>My profile</h2>
+                <p id="profileRole" class="results-summary"></p>
+            </div>
+
+            <p id="profileMessage" class="form-error" role="alert" hidden></p>
+
+            <div id="profileLoading" class="state-box"><p>Loading your profile...</p></div>
+
+            <form id="profileForm" class="form-stack" hidden novalidate>
+                <label class="form-field">
+                    <span>Full name</span>
+                    <input type="text" id="profileName" class="form-control" maxlength="100" required autocomplete="name">
+                </label>
+
+                <label class="form-field">
+                    <span>Email (optional)</span>
+                    <input type="email" id="profileEmail" class="form-control" maxlength="150" autocomplete="email">
+                </label>
+
+                <label class="form-field">
+                    <span>Address (optional)</span>
+                    <textarea id="profileAddress" class="form-control" rows="3" maxlength="255" autocomplete="street-address"></textarea>
+                </label>
+
+                <label class="form-field">
+                    <span>Phone number</span>
+                    <input type="tel" id="profilePhone" class="form-control" readonly>
+                    <small class="results-summary">Phone numbers can't be changed here yet.</small>
+                </label>
+
+                <div style="display: flex; gap: 12px; margin-top: 20px;">
+                    <button type="submit" id="profileSave" class="btn btn-primary">Save changes</button>
+                    <button type="button" id="profileReset" class="btn btn-secondary">Undo changes</button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script src="../../js/core/utils.js"></script>
+    <script src="../../js/config.js"></script>
+    <script src="../../js/auth.js"></script>
+    <script src="../../js/api.js"></script>
+    <script src="../../js/toast.js"></script>
+    <script src="../../js/nav.js"></script>
+    <script src="../../js/core/app.js"></script>
+    <script src="../../js/pages/account/profile.js"></script>
+</body>
+</html>
