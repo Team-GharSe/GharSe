@@ -5,10 +5,10 @@
  * or admin, based on the role in the JWT (Auth.getRole()). The role only picks
  * which links are shown. The backend still enforces access on every request.
  *
- * Only links to pages that exist are shown. When a page is built, add its link
- * back here (marked "add back" below).
+ * For logged-in users the Account button shows "Hi, <first name>", fetched
+ * from GET /v1/users/me. If that fails, it keeps the label "Account".
  *
- * Needs: js/auth.js loaded first.
+ * Needs: js/auth.js and js/api.js loaded first.
  */
 
 var Nav = {
@@ -48,8 +48,8 @@ var Nav = {
             '<a href="' + root + 'pages/auth/signup.html?role=buyer" class="btn btn-secondary nav-cta">Become a Buyer</a>';
     },
 
-    // Add back when built: Cart (pages/marketplace/cart.html), Profile (pages/buyer/profile.html),
-    // My Orders (pages/buyer/orders.html). The cart badge is set with Nav.setCartCount(n).
+    // Add back when built: Cart (pages/marketplace/cart.html), My Orders (pages/buyer/orders.html).
+    // The cart badge is set with Nav.setCartCount(n).
     buyerLinks: function (root) {
         return '' +
             '<a href="' + root + 'index.html" class="nav-link">Home</a>' +
@@ -57,6 +57,7 @@ var Nav = {
             '<div class="nav-profile-dropdown">' +
                 '<button class="nav-link nav-profile-trigger" id="navProfileTrigger" type="button">Account</button>' +
                 '<div class="nav-profile-menu" id="navProfileMenu">' +
+                    '<a class="nav-profile-link" href="' + root + 'pages/account/profile.html">My profile</a>' +
                     '<hr>' +
                     '<button class="nav-profile-link" onclick="Auth.logout()" type="button">Logout</button>' +
                 '</div>' +
@@ -72,6 +73,7 @@ var Nav = {
             '<div class="nav-profile-dropdown">' +
                 '<button class="nav-link nav-profile-trigger" id="navProfileTrigger" type="button">Account</button>' +
                 '<div class="nav-profile-menu" id="navProfileMenu">' +
+                    '<a class="nav-profile-link" href="' + root + 'pages/account/profile.html">My profile</a>' +
                     '<hr>' +
                     '<button class="nav-profile-link" onclick="Auth.logout()" type="button">Logout</button>' +
                 '</div>' +
@@ -122,6 +124,25 @@ var Nav = {
         });
     },
 
+    /**
+     * Replaces the "Account" label with "Hi, <first name>".
+     * Uses textContent, so the name is never parsed as HTML.
+     * On failure the label stays "Account".
+     */
+    setGreeting: async function (navEl) {
+        var trigger = navEl.querySelector("#navProfileTrigger");
+        if (!trigger) return;
+        try {
+            var user = await Api.get("/users/me");
+            var firstName = String(user.name || "").trim().split(/\s+/)[0];
+            if (firstName) {
+                trigger.textContent = "Hi, " + firstName;
+            }
+        } catch (error) {
+            // Keep "Account". Api already logs the user out if the token is rejected.
+        }
+    },
+
     /** Show or hide the cart badge. Call this once the cart backend exists. */
     setCartCount: function (count) {
         var els = document.querySelectorAll("#cartCount");
@@ -148,6 +169,7 @@ var Nav = {
             } else {
                 navEl.innerHTML = this.buyerLinks(root);
             }
+            this.setGreeting(navEl);
         }
 
         this.hideCurrentPageLink(navEl);
