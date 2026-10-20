@@ -23,7 +23,8 @@ var Nav = {
             path.indexOf("/pages/seller/") !== -1 ||
             path.indexOf("/pages/buyer/") !== -1 ||
             path.indexOf("/pages/admin/") !== -1 ||
-            path.indexOf("/pages/marketplace/") !== -1) {
+            path.indexOf("/pages/marketplace/") !== -1 ||
+            path.indexOf("/pages/account/") !== -1) {
             return "../../";
         }
         if (path.indexOf("/pages/") !== -1) {

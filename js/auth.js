@@ -35,7 +35,7 @@ var Auth = {
     /** "../../" from a page two folders deep, "" from the root. Same rule as Nav.getRootPrefix. */
     rootPrefix: function () {
         var path = window.location.pathname;
-        if (/\/pages\/(auth|seller|buyer|admin|marketplace)\//.test(path)) return "../../";
+        if (/\/pages\/(auth|seller|buyer|admin|marketplace|account)\//.test(path)) return "../../";
         if (path.indexOf("/pages/") !== -1) return "../";
         return "";
     },
