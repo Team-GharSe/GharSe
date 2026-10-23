@@ -229,11 +229,15 @@ var ProductFormPage = {
             }
         }
 
-        this.setPhotoError("");
+                this.setPhotoError("");
         this.uploading = true;
         this.renderPhotos();
         try {
-            this.product = await ProductService.uploadPhotos(this.editId, files);
+            var prepared = [];
+            for (var j = 0; j < files.length; j++) {
+                prepared.push(await compressImage(files[j]));
+            }
+            this.product = await ProductService.uploadPhotos(this.editId, prepared);
             this.photos = this.product.photos || [];
             notify("Photos added.", "success");
         } catch (error) {
@@ -381,8 +385,9 @@ var ProductFormPage = {
      * {errors: [{field, message}]} or {errors: {field: message}}.
      * Keys are converted from snake_case to camelCase to match the form field names.
      */
-    serverFieldErrors: function (error) {
-        var list = error && error.body ? error.body.errors : null;
+        serverFieldErrors: function (error) {
+        var body = error && error.body ? error.body : null;
+        var list = body ? body.errors : null;
         var map = {};
 
         if (Array.isArray(list)) {
@@ -497,6 +502,59 @@ function notify(message, type) {
     } else {
         window.alert(message);
     }
+}
+
+/**
+ * Shrinks a photo in the browser before upload (NFR2).
+ * Returns the original File if it is already small or if compression fails.
+ */
+function compressImage(file) {
+    var MAX_EDGE = 1600;
+    var QUALITY = 0.8;
+    var SKIP_BELOW_BYTES = 400 * 1024;
+
+    return new Promise(function (resolve) {
+        if (file.size <= SKIP_BELOW_BYTES) {
+            resolve(file);
+            return;
+        }
+
+        var url = URL.createObjectURL(file);
+        var img = new Image();
+
+        img.onload = function () {
+            URL.revokeObjectURL(url);
+
+            var scale = Math.min(1, MAX_EDGE / Math.max(img.naturalWidth, img.naturalHeight));
+            var width = Math.round(img.naturalWidth * scale);
+            var height = Math.round(img.naturalHeight * scale);
+
+            var canvas = document.createElement("canvas");
+            canvas.width = width;
+            canvas.height = height;
+
+            var ctx = canvas.getContext("2d");
+            ctx.fillStyle = "#ffffff";
+            ctx.fillRect(0, 0, width, height);
+            ctx.drawImage(img, 0, 0, width, height);
+
+            canvas.toBlob(function (blob) {
+                if (!blob || blob.size >= file.size) {
+                    resolve(file);
+                    return;
+                }
+                var name = file.name.replace(/\.[^.]+$/, "") + ".jpg";
+                resolve(new File([blob], name, { type: "image/jpeg" }));
+            }, "image/jpeg", QUALITY);
+        };
+
+        img.onerror = function () {
+            URL.revokeObjectURL(url);
+            resolve(file);
+        };
+
+        img.src = url;
+    });
 }
 
 document.addEventListener("DOMContentLoaded", function () {
