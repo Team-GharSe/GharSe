@@ -28,8 +28,12 @@ var ProductPage = {
         await this.load(id);
     },
 
+    // In load(), right after page.product = await ProductService.getById(id) succeeds,
+// add a reset at the start of load(). Replace the first lines of load() with:
+
     load: async function (id) {
         var page = this;
+        page.stockBlocked = false;   // reset on every load (audit: stale flag)
         page.el.container.innerHTML = '<div class="state-box"><p>Loading product...</p></div>';
 
         try {
@@ -235,6 +239,8 @@ var ProductPage = {
     // Purchase box
     // ---------------------------------------------------------------
 
+    // Replace bindPurchase() entirely:
+
     bindPurchase: function () {
         var page = this;
         var btn = document.getElementById("addToCartBtn");
@@ -245,10 +251,8 @@ var ProductPage = {
             var input = document.getElementById("productQty");
             var qty = parseInt(input.value, 10);
             if (isNaN(qty) || qty < 1) qty = 1;
-            var max = parseInt(input.max, 10);
-            if (!isNaN(max) && qty > max) qty = max;
-            input.value = String(qty);
 
+            // No stock check here: the backend owns stock and answers at cart/checkout (NFR15).
             handleAddToCart(page.product.id, qty);
         });
     },

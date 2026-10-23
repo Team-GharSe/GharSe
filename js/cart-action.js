@@ -3,14 +3,10 @@
  * product pages.
  *
  * Who may buy is decided here (guest -> log in, seller/admin -> blocked) and the
- * server enforces it again. The cart itself lives on the backend. Until the cart
- * module exists there is no CartService, so a buyer sees an honest "not
- * available yet" message instead of a fake local cart.
+ * server enforces it again. On a 409 from the single-seller lock (FR11) the buyer
+ * is offered to clear the cart first.
  *
- * When CartService is added it only needs addItem(productId, quantity). A 409
- * from the single-seller lock (FR11) will be handled in the catch block below.
- *
- * Needs: js/auth.js, js/toast.js.
+ * Needs: js/auth.js, js/toast.js, js/services/cartService.js.
  */
 async function handleAddToCart(productId, quantity) {
     if (!Auth.isLoggedIn()) {
@@ -28,17 +24,67 @@ async function handleAddToCart(productId, quantity) {
         return false;
     }
 
-    if (typeof CartService === "undefined") {
-        showToast("The cart isn't available yet. It's coming soon.", "info");
-        return false;
-    }
-
     try {
         await CartService.addItem(productId, quantity || 1);
         showToast("Added to cart.", "success");
         return true;
     } catch (error) {
-        showToast(error.message, "error");
+        if (error.status === 409) {
+            showClearCartPrompt(productId, quantity || 1, error.message);
+        } else {
+            showToast(error.message, "error");
+        }
         return false;
+    }
+}
+
+/**
+ * Asks the buyer to clear the cart. If they agree, the cart is cleared and the
+ * item is added again.
+ */
+function showClearCartPrompt(productId, quantity, message) {
+    var existing = document.getElementById("clearCartPrompt");
+    if (existing) existing.remove();
+
+    var box = document.createElement("div");
+    box.id = "clearCartPrompt";
+    box.className = "toast toast-info";
+    box.setAttribute("role", "alertdialog");
+    box.setAttribute("aria-live", "assertive");
+    box.innerHTML =
+        '<p style="margin-bottom: 10px;">' + escapeHTML(message) + '</p>' +
+        '<div style="display: flex; gap: 8px;">' +
+            '<button type="button" class="btn btn-primary" id="clearCartConfirm">Clear cart and add</button>' +
+            '<button type="button" class="btn btn-secondary" id="clearCartCancel">Keep my cart</button>' +
+        '</div>';
+    document.body.appendChild(box);
+
+    document.getElementById("clearCartCancel").addEventListener("click", function () {
+        box.remove();
+    });
+
+    document.getElementById("clearCartConfirm").addEventListener("click", async function () {
+        box.remove();
+        try {
+            await CartService.clear();
+            await CartService.addItem(productId, quantity);
+            showToast("Cart cleared. Item added.", "success");
+            updateCartCount();
+        } catch (error) {
+            showToast(error.message, "error");
+        }
+    });
+}
+
+/** Refreshes the cart count badge in the nav, if the nav has one. */
+async function updateCartCount() {
+    var badge = document.getElementById("cartCount");
+    if (!badge || !Auth.isLoggedIn() || Auth.getRole() !== "BUYER") return;
+    try {
+        var cart = await CartService.get();
+        badge.textContent = String(cart.items.reduce(function (n, line) { return n + line.quantity; }, 0));
+        badge.hidden = cart.items.length === 0;
+    } catch (error) {
+        badge.hidden = true;
     }
 }

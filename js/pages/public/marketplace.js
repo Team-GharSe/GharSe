@@ -366,7 +366,11 @@ var MarketplacePage = {
         var el = page.el;
 
         if (result.items.length === 0) {
-            el.summary.textContent = "";
+            // In render(), replace the summary line:
+
+            el.summary.textContent = "Showing " + first + "-" + last + " of " + result.totalItems +
+            (result.totalItems === 1 ? " product" : " products") +
+            (page.state.near && page.state.sort === "recommended" ? ", nearest first among verified sellers" : "");
             el.pagination.innerHTML = "";
             el.grid.innerHTML =
                 '<div class="state-box">' +
