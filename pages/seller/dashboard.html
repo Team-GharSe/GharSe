@@ -54,13 +54,15 @@
                 </div>
                 <div class="metric-card">
                     <span style="font-size: 0.85rem; color: var(--color-text-muted);">Active Products</span>
-                    <h3 style="font-size: 1.8rem; margin-top: 6px;">—</h3>
+                    <h3 id="activeProductsCount" style="font-size: 1.8rem; margin-top: 6px;">—</h3>
                 </div>
             </div>
 
             <div class="metric-card">
                 <h3 style="margin-bottom: 8px;">Recent Sales</h3>
-                <p style="color: var(--color-text-muted);">Sales appear here once orders are live.</p>
+                <div id="recentOrders" aria-busy="true">
+                <p style="color: var(--color-text-muted);">Loading orders...</p>
+            </div>
             </div>
         </div>
     </main>
@@ -69,7 +71,9 @@
     <script src="../../js/api.js"></script>
     <script src="../../js/auth.js"></script>
     <script src="../../js/nav.js"></script>
+    <script src="../../js/core/utils.js"></script>
     <script src="../../js/core/app.js"></script>
+    <script src="../../js/services/productService.js"></script>
     <script src="../../js/pages/seller/dashboard.js"></script>
 </body>
 </html>
