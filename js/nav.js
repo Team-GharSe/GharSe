@@ -5,20 +5,18 @@
  * or admin, based on the role in the JWT (Auth.getRole()). The role only picks
  * which links are shown. The backend still enforces access on every request.
  *
+ * Buyers get Cart (with a count badge) and My Orders.
  * For logged-in users the Account button shows a greeting:
  *   buyers  -> "Hi, <first name>"     from GET /v1/users/me
  *   sellers -> "<business name>"      from GET /v1/seller/me
  * If the request fails, the label stays "Account".
  *
  * Needs: js/auth.js and js/api.js loaded first.
+ * Cart badge needs js/services/cartService.js and js/cart-action.js.
  */
 
 var Nav = {
 
-    /**
-     * How many "../" segments are needed to get back to the project root
-     * from the current page. Works wherever the site is hosted.
-     */
     getRootPrefix: function () {
         var path = window.location.pathname;
         if (path.indexOf("/pages/auth/") !== -1 ||
@@ -35,7 +33,6 @@ var Nav = {
         return "";
     },
 
-    /** Filename of the current page, used to hide the matching nav link. */
     getCurrentFile: function () {
         var path = window.location.pathname;
         return path.substring(path.lastIndexOf("/") + 1) || "index.html";
@@ -50,12 +47,13 @@ var Nav = {
             '<a href="' + root + 'pages/auth/signup.html?role=buyer" class="btn btn-secondary nav-cta">Become a Buyer</a>';
     },
 
-    // Add back when built: Cart (pages/marketplace/cart.html), My Orders (pages/buyer/orders.html).
-    // The cart badge is set with Nav.setCartCount(n).
     buyerLinks: function (root) {
         return '' +
             '<a href="' + root + 'index.html" class="nav-link">Home</a>' +
             '<a href="' + root + 'pages/marketplace/marketplace.html" class="nav-link">Explore</a>' +
+            '<a href="' + root + 'pages/marketplace/cart.html" class="nav-link nav-cart">Cart' +
+                ' <span class="nav-badge" id="cartCount" style="display: none;">0</span></a>' +
+            '<a href="' + root + 'pages/buyer/orders.html" class="nav-link">My Orders</a>' +
             '<div class="nav-profile-dropdown">' +
                 '<button class="nav-link nav-profile-trigger" id="navProfileTrigger" type="button">Account</button>' +
                 '<div class="nav-profile-menu" id="navProfileMenu">' +
@@ -83,7 +81,6 @@ var Nav = {
             '</div>';
     },
 
-    // No admin pages exist yet. Add their links here when they do.
     adminLinks: function (root) {
         return '' +
             '<a href="' + root + 'index.html" class="nav-link">Home</a>' +
@@ -96,10 +93,6 @@ var Nav = {
             '</div>';
     },
 
-    /**
-     * Remove any nav link whose href points at the current page.
-     * Compares just the filename so relative-depth differences don't matter.
-     */
     hideCurrentPageLink: function (navEl) {
         var currentFile = this.getCurrentFile();
         var links = navEl.querySelectorAll("a[href]");
@@ -127,11 +120,6 @@ var Nav = {
         });
     },
 
-    /**
-     * Replaces the "Account" label with a greeting for the role.
-     * Uses textContent, so names are never parsed as HTML.
-     * On failure the label stays "Account".
-     */
     setGreeting: async function (navEl, role) {
         var trigger = navEl.querySelector("#navProfileTrigger");
         if (!trigger) return;
@@ -150,12 +138,24 @@ var Nav = {
         }
     },
 
-    /** Show or hide the cart badge. Call this once the cart backend exists. */
+    /** Shows the cart count. Hidden when the count is zero. */
     setCartCount: function (count) {
         var els = document.querySelectorAll("#cartCount");
         for (var i = 0; i < els.length; i++) {
-            els[i].textContent = count;
+            els[i].textContent = String(count);
             els[i].style.display = count > 0 ? "" : "none";
+        }
+    },
+
+    /** Loads the real count from the server for buyers. */
+    loadCartCount: async function () {
+        if (typeof CartService === "undefined") return;
+        try {
+            var cart = await CartService.get();
+            var total = cart.items.reduce(function (n, line) { return n + line.quantity; }, 0);
+            this.setCartCount(total);
+        } catch (error) {
+            this.setCartCount(0);
         }
     },
 
@@ -175,6 +175,7 @@ var Nav = {
                 navEl.innerHTML = this.adminLinks(root);
             } else {
                 navEl.innerHTML = this.buyerLinks(root);
+                this.loadCartCount();
             }
             this.setGreeting(navEl, role);
         }
