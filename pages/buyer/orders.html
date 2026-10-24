@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders - Artisan</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/components.css">
+    <link rel="stylesheet" href="../../css/responsive.css">
+    <style>
+        [hidden] { display: none !important; }
+        .order-card { padding: 20px; margin-bottom: 16px; border: 1px solid #e5e5e5; border-radius: 12px; }
+        .order-head { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+        .order-items { margin: 12px 0 0; padding-left: 18px; }
+        .order-link { display: inline-block; margin-top: 12px; }
+    </style>
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="../../index.html" class="brand">
+                <span class="brand-mark">A</span>
+                <span class="brand-name">Artisan</span>
+            </a>
+            <nav class="main-nav" aria-label="Main navigation"></nav>
+            <button class="mobile-menu-button" id="mobileMenuButton" type="button" aria-label="Open navigation menu" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <main class="section">
+        <div class="container">
+            <div class="section-heading">
+                <span class="eyebrow">Your account</span>
+                <h2>My orders</h2>
+            </div>
+
+            <p id="ordersAlert" class="form-error" role="alert" hidden></p>
+            <div id="ordersList" aria-busy="true">
+                <div class="state-box"><p>Loading your orders...</p></div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-bottom">
+            <span>© 2026 Artisan Marketplace</span>
+        </div>
+    </footer>
+
+    <script src="../../js/config.js"></script>
+    <script src="../../js/core/utils.js"></script>
+    <script src="../../js/api.js"></script>
+    <script src="../../js/auth.js"></script>
+    <script src="../../js/services/orderService.js"></script>
+    <script src="../../js/toast.js"></script>
+    <script src="../../js/nav.js"></script>
+    <script src="../../js/pages/buyer/orders.js"></script>
+
+</body>
+</html>

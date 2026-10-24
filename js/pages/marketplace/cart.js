@@ -162,7 +162,7 @@ var CartPage = {
                 "Your cart is empty",
                 "Find something you love in the marketplace.",
                 false,
-                '<a href="marketplace.html" class="btn btn-primary">Browse products</a>'
+                '<a href="marketplace.html" class="btn btnprimary">Browse products</a>'
             );
             return;
         }
@@ -220,7 +220,7 @@ var CartPage = {
 
     renderMessage: function (title, text, showLogin, extraHTML) {
         var action = extraHTML || (showLogin
-            ? '<a href="auth/login.html" class="btn btn-primary">Log in</a>'
+            ? '<a href="../auth/login.html" class="btn btn-primary">Log in</a>'
             : '');
         this.el.container.innerHTML =
             '<div class="state-box">' +

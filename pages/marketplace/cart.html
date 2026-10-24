@@ -1,14 +1,74 @@
-<main class="section">
-    <div class="container" id="cartContainer">
-        <div class="state-box"><p>Loading your cart...</p></div>
-    </div>
-</main>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart - Artisan</title>
 
-<script src="../../js/config.js"></script>
-<script src="../../js/core/utils.js"></script>
-<script src="../../js/api.js"></script>
-<script src="../../js/auth.js"></script>
-<script src="../../js/services/cartService.js"></script>
-<script src="../../js/toast.js"></script>
-<script src="../../js/nav.js"></script>
-<script src="../../js/pages/marketplace/cart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/components.css">
+    <link rel="stylesheet" href="../../css/responsive.css">
+    <style>
+        [hidden] { display: none !important; }
+        .cart-layout { display: grid; grid-template-columns: 1fr; gap: 24px; margin-top: 20px; }
+        @media (min-width: 900px) { .cart-layout { grid-template-columns: 2fr 1fr; } }
+        .cart-lines { list-style: none; padding: 0; margin: 0; }
+        .cart-line { display: grid; grid-template-columns: 1fr auto; gap: 12px; padding: 18px 0; border-bottom: 1px solid #e5e5e5; }
+        .cart-line.is-unavailable { opacity: 0.6; }
+        .cart-line-price, .cart-note { color: var(--color-text-muted); font-size: 0.9rem; }
+        .cart-line-warning { color: #b00020; font-size: 0.9rem; margin-top: 4px; }
+        .qty-stepper { display: flex; align-items: center; gap: 6px; }
+        .qty-stepper input { width: 64px; text-align: center; }
+        .cart-line-total { text-align: right; display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
+        .cart-summary { padding: 20px; border: 1px solid #e5e5e5; border-radius: 12px; display: flex; flex-direction: column; gap: 14px; height: fit-content; }
+        .cart-subtotal { display: flex; justify-content: space-between; }
+    </style>
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="../../index.html" class="brand">
+                <span class="brand-mark">A</span>
+                <span class="brand-name">Artisan</span>
+            </a>
+            <nav class="main-nav" aria-label="Main navigation"></nav>
+            <button class="mobile-menu-button" id="mobileMenuButton" type="button" aria-label="Open navigation menu" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <main class="section">
+        <div class="container" id="cartContainer">
+            <div class="state-box"><p>Loading your cart...</p></div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-bottom">
+            <span>© 2026 Artisan Marketplace</span>
+        </div>
+    </footer>
+
+    <script src="../../js/config.js"></script>
+    <script src="../../js/core/utils.js"></script>
+    <script src="../../js/api.js"></script>
+    <script src="../../js/auth.js"></script>
+    <script src="../../js/services/cartService.js"></script>
+    <script src="../../js/toast.js"></script>
+    <script src="../../js/cart-action.js"></script>
+    <script src="../../js/nav.js"></script>
+    <script src="../../js/pages/marketplace/cart.js"></script>
+
+</body>
+</html>
