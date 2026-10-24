@@ -73,7 +73,6 @@ var CartPage = {
         this.render();
     },
 
-    /** Applies a server response and redraws. The buyer's last action wins. */
     apply: function (cart) {
         this.cart = cart;
         this.render();
@@ -162,7 +161,7 @@ var CartPage = {
                 "Your cart is empty",
                 "Find something you love in the marketplace.",
                 false,
-                '<a href="marketplace.html" class="btn btnprimary">Browse products</a>'
+                '<a href="marketplace.html" class="btn btn-primary">Browse products</a>'
             );
             return;
         }
@@ -185,7 +184,7 @@ var CartPage = {
                     '<h2>Summary</h2>' +
                     '<p class="cart-subtotal"><span>Subtotal</span><strong>' + formatCurrency(cart.subtotal) + '</strong></p>' +
                     '<p class="cart-note">Delivery and payment are confirmed at checkout.</p>' +
-                    '<a href="checkout.html" class="btn btn-primary btn-large" id="checkoutLink" aria-disabled="true">Checkout</a>' +
+                    '<a href="checkout.html" class="btn btn-primary btn-large" id="checkoutLink">Checkout</a>' +
                     '<button type="button" class="btn btn-secondary" data-action="clear-cart">Clear cart</button>' +
                 '</aside>' +
             '</div>';
