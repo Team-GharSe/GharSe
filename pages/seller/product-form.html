@@ -25,6 +25,8 @@
         .field .form-control[aria-invalid="true"] { border-color: #b42318; }
         .choice { display: flex; gap: 8px; align-items: center; font-weight: 400; }
         .sub-row { display: grid; gap: 6px; padding-left: 12px; border-left: 3px solid var(--color-border, #d9d4cc); }
+        .input-row { display: flex; gap: 8px; align-items: center; }
+        .input-row input { flex: 1; }
         .form-alert { margin-top: 16px; padding: 12px 14px; border-radius: 8px; background: #fdecea; color: #7a1d14; }
         .photo-note { padding: 14px; border-radius: 8px; background: #f7f4ef; color: var(--color-text-muted, #6b6b6b); }
         .photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
@@ -103,8 +105,16 @@
                 </div>
 
                 <div class="field sub-row" id="madeToOrderRow" hidden>
-                    <label for="productionTimeMinutesPerUnit">Minutes to make one item</label>
-                    <input id="productionTimeMinutesPerUnit" name="productionTimeMinutesPerUnit" class="form-control" type="number" min="1" step="1" inputmode="numeric">
+                    <label for="productionTime">Time needed to make one unit</label>
+                    <div class="input-row">
+                        <input id="productionTime" name="productionTime" class="form-control" type="number" min="1" step="1" inputmode="numeric">
+                        <select id="productionTimeUnit" name="productionTimeUnit" class="form-control">
+                            <option value="60">Hours</option>
+                            <option value="1440">Days</option>
+                            <option value="1">Minutes</option>
+                        </select>
+                    </div>
+                    <small>How long it takes you to finish one piece.</small>
                     <span class="field-error" data-error-for="productionTimeMinutesPerUnit"></span>
                 </div>
 

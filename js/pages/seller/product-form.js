@@ -10,6 +10,9 @@
  * for the matching type; the other one is sent as null.
  * Server errors are shown next to the field they name, otherwise in the alert box.
  *
+ * "Time needed" is entered as an amount plus a unit (hours, days or minutes).
+ * It is converted to minutes for the API, which still stores productionTimeMinutesPerUnit.
+ *
  * Needs (in this order): core/utils.js, config.js, auth.js, api.js,
  * services/productService.js, toast.js, nav.js, seller-guard.js.
  */
@@ -127,7 +130,7 @@ var ProductFormPage = {
         this.setValue("price", p.price);
         this.setValue("categoryId", p.categoryId === null ? "" : String(p.categoryId));
         this.setValue("inventoryQty", p.inventoryQty);
-        this.setValue("productionTimeMinutesPerUnit", p.productionTimeMinutesPerUnit);
+        this.fillProductionTime(p.productionTimeMinutesPerUnit);
         this.setValue("deliveryRadiusKm", p.deliveryRadiusKm);
 
         this.radios().forEach(function (radio) {
@@ -141,6 +144,22 @@ var ProductFormPage = {
         this.toggleDelivery();
         this.photos = p.photos || [];
         this.renderPhotos();
+    },
+
+    /** Shows stored minutes as the largest whole unit: 120 -> 2 Hours, 1440 -> 1 Day. */
+    fillProductionTime: function (totalMinutes) {
+        var total = Number(totalMinutes) || 0;
+        var amount = total;
+        var unit = "1";
+        if (total > 0 && total % 1440 === 0) {
+            amount = total / 1440;
+            unit = "1440";
+        } else if (total > 0 && total % 60 === 0) {
+            amount = total / 60;
+            unit = "60";
+        }
+        this.setValue("productionTime", total > 0 ? amount : "");
+        this.setValue("productionTimeUnit", unit);
     },
 
     // ---------------------------------------------------------------
@@ -229,7 +248,7 @@ var ProductFormPage = {
             }
         }
 
-                this.setPhotoError("");
+        this.setPhotoError("");
         this.uploading = true;
         this.renderPhotos();
         try {
@@ -267,6 +286,14 @@ var ProductFormPage = {
     // Read, validate, save
     // ---------------------------------------------------------------
 
+    /** Converts the amount and unit fields into minutes. Returns null if the amount is empty. */
+    productionMinutesFromForm: function () {
+        var amount = numOrNull(this.value("productionTime"));
+        var unitMinutes = Number(this.value("productionTimeUnit")) || 1;
+        if (amount === null) return null;
+        return Math.round(amount * unitMinutes);
+    },
+
     /** Builds the ProductRequest body. Empty number inputs become null. */
     readForm: function () {
         var type = this.selectedFulfilment();
@@ -279,7 +306,7 @@ var ProductFormPage = {
             categoryId: numOrNull(this.value("categoryId")),
             fulfilmentType: type || null,
             inventoryQty: type === "READY_STOCK" ? intOrNull(this.value("inventoryQty")) : null,
-            productionTimeMinutesPerUnit: type === "MADE_TO_ORDER" ? intOrNull(this.value("productionTimeMinutesPerUnit")) : null,
+            productionTimeMinutesPerUnit: type === "MADE_TO_ORDER" ? this.productionMinutesFromForm() : null,
             supportsSelfDelivery: selfDelivery,
             supportsPickup: document.getElementById("supportsPickup").checked,
             supportsPostal: document.getElementById("supportsPostal").checked,
@@ -307,8 +334,11 @@ var ProductFormPage = {
                 errors.inventoryQty = "Enter how many items are in stock (0 or more).";
             }
         } else if (p.fulfilmentType === "MADE_TO_ORDER") {
-            if (p.productionTimeMinutesPerUnit === null || p.productionTimeMinutesPerUnit < 1) {
-                errors.productionTimeMinutesPerUnit = "Enter the minutes needed to make one item (at least 1).";
+            var amount = numOrNull(this.value("productionTime"));
+            if (amount === null || amount < 1 || amount % 1 !== 0) {
+                errors.productionTimeMinutesPerUnit = "Enter a whole number of at least 1 for the time needed.";
+            } else if (p.productionTimeMinutesPerUnit === null || p.productionTimeMinutesPerUnit < 1) {
+                errors.productionTimeMinutesPerUnit = "The time needed must be at least 1 minute.";
             }
         }
 
@@ -385,7 +415,7 @@ var ProductFormPage = {
      * {errors: [{field, message}]} or {errors: {field: message}}.
      * Keys are converted from snake_case to camelCase to match the form field names.
      */
-        serverFieldErrors: function (error) {
+    serverFieldErrors: function (error) {
         var body = error && error.body ? error.body : null;
         var list = body ? body.errors : null;
         var map = {};
