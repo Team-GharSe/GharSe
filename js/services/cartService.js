@@ -23,7 +23,8 @@ var CartService = (function () {
             unitPrice: toNumber(raw.unitPrice, 0),
             quantity: toNumber(raw.quantity, 0),
             lineTotal: toNumber(raw.lineTotal, 0),
-            available: raw.available !== false
+            available: raw.available !== false,
+            estimatedReadyDate: raw.estimatedReadyDate || null
         };
     }
 

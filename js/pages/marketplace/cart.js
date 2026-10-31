@@ -207,6 +207,9 @@ var CartPage = {
                 '<div class="cart-line-main">' +
                     '<h3>' + escapeHTML(line.name) + '</h3>' +
                     '<p class="cart-line-price">' + formatCurrency(line.unitPrice) + ' each</p>' +
+                        (line.estimatedReadyDate
+                        ? '<p class="cart-line-eta">Ready by ' + escapeHTML(line.estimatedReadyDate) + '</p>'
+                        : '') +
                     (unavailable ? '<p class="cart-line-warning">This item is no longer available. Remove it to check out.</p>' : '') +
                 '</div>' +
                 stepper +

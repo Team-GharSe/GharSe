@@ -366,11 +366,7 @@ var MarketplacePage = {
         var el = page.el;
 
         if (result.items.length === 0) {
-            // In render(), replace the summary line:
-
-            el.summary.textContent = "Showing " + first + "-" + last + " of " + result.totalItems +
-            (result.totalItems === 1 ? " product" : " products") +
-            (page.state.near && page.state.sort === "recommended" ? ", nearest first among verified sellers" : "");
+            el.summary.textContent = "No products match your filters.";
             el.pagination.innerHTML = "";
             el.grid.innerHTML =
                 '<div class="state-box">' +
@@ -383,9 +379,12 @@ var MarketplacePage = {
 
         var first = (result.page - 1) * result.pageSize + 1;
         var last = first + result.items.length - 1;
+        // Only say "nearest" when the sort really is the distance-aware default.
+        var nearNote = page.state.near && page.state.sort === "recommended"
+            ? ", verified sellers first, then nearest"
+            : "";
         el.summary.textContent = "Showing " + first + "-" + last + " of " + result.totalItems +
-            (result.totalItems === 1 ? " product" : " products") +
-            (page.state.near ? ", closest first" : "");
+            (result.totalItems === 1 ? " product" : " products") + nearNote;
 
         el.grid.innerHTML = result.items.map(function (p) { return page.cardHTML(p); }).join("");
 

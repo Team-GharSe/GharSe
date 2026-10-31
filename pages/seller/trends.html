@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trends - Artisan Studio</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/components.css">
+    <link rel="stylesheet" href="../../css/responsive.css">
+    <style>
+        [hidden] { display: none !important; }
+        .trend-filter { display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; margin: 20px 0; }
+        .trend-filter label { display: grid; gap: 4px; font-weight: 600; font-size: 0.9rem; }
+        .trend-chart { display: flex; align-items: flex-end; gap: 6px; height: 240px; padding: 12px 0; border-bottom: 1px solid #e6e1d8; overflow-x: auto; }
+        .trend-col { flex: 1 0 28px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; min-width: 28px; }
+        .trend-bar { width: 100%; background: var(--color-primary, #b5651d); border-radius: 4px 4px 0 0; min-height: 2px; }
+        .trend-label { font-size: 0.7rem; color: #6b6b6b; margin-top: 6px; white-space: nowrap; }
+        .trend-value { font-size: 0.7rem; color: #3d3d3d; margin-bottom: 4px; white-space: nowrap; }
+        .form-alert { margin-top: 16px; padding: 12px 14px; border-radius: 8px; background: #fdecea; color: #7a1d14; }
+        .muted { color: var(--color-text-muted, #6b6b6b); }
+    </style>
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="dashboard.html" class="brand">
+                <span class="brand-mark">A</span>
+                <span class="brand-name">Artisan Studio</span>
+            </a>
+            <nav class="main-nav" aria-label="Main navigation"></nav>
+        </div>
+    </header>
+
+    <main class="section">
+        <div class="container">
+            <a href="dashboard.html" class="text-link back-link">&larr; Back to dashboard</a>
+            <h1 style="font-size: 1.8rem; margin-top: 12px;">Sales trends</h1>
+            <p class="muted">Revenue per day for the selected dates. Hover a bar to see its value.</p>
+
+            <div id="pageAlert" class="form-alert" role="alert" hidden></div>
+
+            <form id="rangeForm" class="trend-filter">
+                <label>From
+                    <input type="date" id="fromDate" class="form-control" required>
+                </label>
+                <label>To
+                    <input type="date" id="toDate" class="form-control" required>
+                </label>
+                <button type="submit" class="btn btn-primary">Show</button>
+            </form>
+
+            <p id="summaryLine" class="muted"></p>
+            <div id="chart" class="trend-chart" aria-label="Daily revenue chart"></div>
+            <p id="emptyNote" class="muted" hidden>No sales in this period.</p>
+        </div>
+    </main>
+
+    <script src="../../js/config.js"></script>
+    <script src="../../js/core/utils.js"></script>
+    <script src="../../js/api.js"></script>
+    <script src="../../js/auth.js"></script>
+    <script src="../../js/toast.js"></script>
+    <script src="../../js/nav.js"></script>
+    <script src="../../js/pages/seller/seller-guard.js"></script>
+    <script src="../../js/pages/seller/trends.js"></script>
+</body>
+</html>

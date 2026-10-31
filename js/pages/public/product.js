@@ -113,7 +113,7 @@ var ProductPage = {
         this.bindPurchase();
 
         // The listing says ready-stock is sold out: block the button right away.
-        if (p.inStock === false) this.blockPurchase("Out of stock");
+                if (p.inStock === false) this.el.container.querySelector("#availability").classList.add("is-out");
     },
 
     fulfilmentHTML: function (p) {
@@ -210,14 +210,11 @@ var ProductPage = {
         if (eta.inStock === false) {
             el.textContent = "Out of stock";
             el.classList.add("is-out");
-            page.blockPurchase("Out of stock");
             return;
         }
 
         if (eta.quantityRemaining !== null) {
             el.textContent = "In stock: " + eta.quantityRemaining + " available";
-            var qty = document.getElementById("productQty");
-            if (qty && eta.quantityRemaining > 0) qty.max = String(eta.quantityRemaining);
         } else {
             el.textContent = "In stock";
         }

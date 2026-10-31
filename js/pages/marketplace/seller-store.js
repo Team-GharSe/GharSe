@@ -39,11 +39,17 @@ var SellerStorePage = {
         }
 
         document.title = seller.businessName + " - Artisan";
+        var ratingText = seller.averageRating === null
+            ? "No reviews yet"
+            : seller.averageRating.toFixed(1) + " average from " + seller.reviewCount +
+              (seller.reviewCount === 1 ? " review" : " reviews");
+
         page.container.innerHTML =
             '<a href="marketplace.html" class="text-link back-link">&larr; Back to marketplace</a>' +
             '<header style="margin-top: 12px;">' +
                 '<span class="eyebrow">Independent maker</span>' +
                 '<h1 style="font-size: 2rem; margin-top: 6px;">' + escapeHTML(seller.businessName) + '</h1>' +
+                '<p style="color: var(--color-text-muted); margin-top: 6px;">&#9733; ' + escapeHTML(ratingText) + '</p>' +
             '</header>' +
             '<h2 style="font-size: 1.3rem; margin-top: 28px;">Products</h2>' +
             '<div id="storeProducts" style="margin-top: 14px;">' +

@@ -13,7 +13,10 @@ var SellerService = (function () {
                 id: raw.id,
                 businessName: String(raw.businessName || ""),
                 latitude: raw.latitude,
-                longitude: raw.longitude
+                longitude: raw.longitude,
+                averageRating: raw.averageRating === null || raw.averageRating === undefined
+                    ? null : Number(raw.averageRating),
+                reviewCount: Number(raw.reviewCount || 0)
             };
         }
     };

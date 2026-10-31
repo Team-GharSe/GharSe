@@ -198,8 +198,8 @@ var CheckoutPage = {
             }
             await new Promise(resolve => setTimeout(resolve, this.POLL_INTERVAL_MS));
         }
-        this.renderMessage("Payment received, confirming your order",
-            '<p>This is taking longer than usual. Check your orders in a minute.</p>' +
+            this.renderMessage("Your payment is being confirmed",
+            '<p>This is taking longer than usual. Your order will appear in My Orders once the payment is confirmed. Check back in a few minutes.</p>' +
             '<a href="../buyer/orders.html" class="btn btn-primary">View my orders</a>');
     },
 

@@ -1,10 +1,11 @@
 /**
- * GharSe - seller dashboard. Shows the store from GET /v1/seller/me and the
- * five most recent orders from GET /v1/seller/me/orders.
- * Revenue and units stay as dashes: the server sends no totals and the
- * browser must not compute them (NFR15).
+ * GharSe - seller dashboard. Shows the store from GET /v1/seller/me, sales
+ * totals for the last 30 days from GET /v1/seller/me/analytics, the production
+ * backlog from GET /v1/seller/me/backlog, and the five most recent orders from
+ * GET /v1/seller/me/orders. The browser shows the server's numbers only; it
+ * does no totals itself (NFR15).
  *
- * Needs: config.js, api.js, auth.js, nav.js, core/utils.js, services/orderService.js.
+ * Needs: config.js, api.js, auth.js, nav.js, core/utils.js, services/productService.js.
  */
 var SellerDashboard = {
 
@@ -21,7 +22,13 @@ var SellerDashboard = {
             window.location.href = "../auth/login.html";
             return;
         }
-            await Promise.all([this.loadStore(), this.loadRecentOrders(), this.loadActiveCount()]);
+        await Promise.all([
+            this.loadStore(),
+            this.loadAnalytics(),
+            this.loadBacklog(),
+            this.loadRecentOrders(),
+            this.loadActiveCount()
+        ]);
     },
 
     loadStore: async function () {
@@ -36,6 +43,54 @@ var SellerDashboard = {
             nameEl.textContent = "Your store";
             this.showAlert(error.message);
         }
+    },
+
+    loadAnalytics: async function () {
+        var revenueEl = document.getElementById("revenueValue");
+        var unitsEl = document.getElementById("unitsValue");
+        if (!revenueEl || !unitsEl) return;
+
+        try {
+            var data = await Api.get("/seller/me/analytics");
+            revenueEl.textContent = formatCurrency(Number(data.revenue) || 0);
+            unitsEl.textContent = String(data.unitsSold != null ? data.unitsSold : 0);
+        } catch (error) {
+            revenueEl.textContent = "—";
+            unitsEl.textContent = "—";
+        }
+    },
+
+    loadBacklog: async function () {
+        var box = document.getElementById("backlogList");
+        if (!box) return;
+
+        var items;
+        try {
+            items = await Api.get("/seller/me/backlog");
+        } catch (error) {
+            box.setAttribute("aria-busy", "false");
+            box.innerHTML = '<p style="color: var(--color-text-muted);">Backlog couldn\'t be loaded.</p>';
+            return;
+        }
+
+        box.setAttribute("aria-busy", "false");
+
+        if (!Array.isArray(items) || items.length === 0) {
+            box.innerHTML = '<p style="color: var(--color-text-muted);">No made-to-order items in production.</p>';
+            return;
+        }
+
+        var rows = items.map(function (item) {
+            var clearDate = item.estimatedClearDate || "—";
+            return '<li class="seller-order-row">' +
+                '<span><strong>' + escapeHTML(item.productName) + '</strong> &middot; ' +
+                escapeHTML(item.unitsCommitted) + ' unit(s) committed</span>' +
+                '<span class="badge badge-neutral">Clears ' + escapeHTML(clearDate) + '</span>' +
+            '</li>';
+        }).join("");
+
+        box.innerHTML = '<ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 10px;">' +
+            rows + '</ul>';
     },
 
     loadRecentOrders: async function () {
