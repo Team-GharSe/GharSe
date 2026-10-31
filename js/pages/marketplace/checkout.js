@@ -11,7 +11,7 @@
  *
  * Needs (in this order): core/utils.js, config.js, auth.js, api.js,
  * services/cartService.js, services/checkoutService.js, toast.js, nav.js,
- * and the Razorpay script.
+ * and the Razorpay script (loaded in checkout.html).
  */
 var CheckoutPage = {
 
@@ -26,7 +26,8 @@ var CheckoutPage = {
         if (!this.el.container) return;
 
         if (!Auth.isLoggedIn()) {
-            this.renderMessage("Log in to check out", '<a href="../auth/login.html" class="btn btn-primary">Log in</a>');
+            this.renderMessage("Log in to check out",
+                '<a href="../auth/login.html" class="btn btn-primary">Log in</a>');
             return;
         }
 
@@ -39,11 +40,13 @@ var CheckoutPage = {
         try {
             this.cart = await CartService.get();
         } catch (error) {
-            this.renderMessage("We couldn't load your cart", '<p>' + escapeHTML(error.message || "") + '</p>');
+            this.renderMessage("We couldn't load your cart",
+                '<p>' + escapeHTML(error.message || "") + '</p>');
             return;
         }
         if (this.cart.items.length === 0) {
-            this.renderMessage("Your cart is empty", '<a href="marketplace.html" class="btn btn-primary">Browse products</a>');
+            this.renderMessage("Your cart is empty",
+                '<a href="marketplace.html" class="btn btn-primary">Browse products</a>');
             return;
         }
         this.render();
@@ -52,8 +55,9 @@ var CheckoutPage = {
     render: function () {
         var cart = this.cart;
         var lines = cart.items.map(function (line) {
-            return '<li class="checkout-summary-line"><span>' + escapeHTML(line.name) + ' &times; ' +
-                escapeHTML(line.quantity) + '</span><strong>' + formatCurrency(line.lineTotal) + '</strong></li>';
+            return '<li class="checkout-summary-line"><span>' + escapeHTML(line.name) +
+                ' &times; ' + escapeHTML(String(line.quantity)) + '</span><strong>' +
+                escapeHTML(formatCurrency(line.lineTotal)) + '</strong></li>';
         }).join("");
 
         this.el.container.innerHTML =
@@ -72,9 +76,13 @@ var CheckoutPage = {
                 '</section>' +
                 '<aside class="checkout-card">' +
                     '<h2>Order summary</h2>' +
-                    '<ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 8px;">' + lines + '</ul>' +
-                    '<p class="checkout-summary-line"><span>Subtotal</span><strong>' + formatCurrency(cart.subtotal) + '</strong></p>' +
-                    '<p style="font-size: 0.85rem; color: var(--color-text-muted);">Final amount is confirmed by the payment provider.</p>' +
+                    '<ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 8px;">' +
+                        lines +
+                    '</ul>' +
+                    '<p class="checkout-summary-line"><span>Subtotal</span><strong>' +
+                        escapeHTML(formatCurrency(cart.subtotal)) + '</strong></p>' +
+                    '<p style="font-size: 0.85rem; color: var(--color-text-muted);">' +
+                        'Final amount is confirmed by the payment provider.</p>' +
                     '<p class="form-error" id="checkoutError" role="alert" hidden></p>' +
                     '<button type="submit" class="btn btn-primary btn-large" id="payBtn">Pay now</button>' +
                 '</aside>' +
@@ -82,15 +90,15 @@ var CheckoutPage = {
 
         this.toggleAddressRequirement();
         var page = this;
-        Array.prototype.forEach.call(this.el.container.querySelectorAll('input[name="fulfilmentMode"]'), function (r) {
-            r.addEventListener("change", function () { page.toggleAddressRequirement(); });
-        });
+        Array.prototype.forEach.call(
+            this.el.container.querySelectorAll('input[name="fulfilmentMode"]'),
+            function (r) { r.addEventListener("change", function () { page.toggleAddressRequirement(); }); }
+        );
     },
 
     /** Address is needed for delivery and postal, not for pickup. Hint only; the server decides. */
     toggleAddressRequirement: function () {
-        var mode = this.selectedMode();
-        var needed = mode !== "PICKUP";
+        var needed = this.selectedMode() !== "PICKUP";
         var area = document.getElementById("deliveryAddress");
         if (area) area.required = needed;
     },
@@ -140,7 +148,7 @@ var CheckoutPage = {
         var page = this;
         var rzp = new Razorpay({
             key: order.razorpayKeyId,
-            amount: order.amount,
+            amount: order.amount,          // already in paise from the server
             currency: order.currency,
             order_id: order.razorpayOrderId,
             name: "Artisan",
@@ -176,7 +184,8 @@ var CheckoutPage = {
             try {
                 var status = await CheckoutService.status(paymentId);
                 if (status.status === "SUCCESS" && status.orderId) {
-                    window.location.href = "../buyer/order-detail.html?id=" + encodeURIComponent(status.orderId) + "&placed=1";
+                    window.location.href = "../buyer/order-detail.html?id=" +
+                        encodeURIComponent(status.orderId) + "&placed=1";
                     return;
                 }
                 if (status.status === "FAILED" || status.status === "REFUNDED") {
@@ -187,7 +196,7 @@ var CheckoutPage = {
             } catch (error) {
                 // A failed poll is retried; the next attempt may succeed.
             }
-            await new Promise(function (resolve) { setTimeout(resolve, this.POLL_INTERVAL_MS); }.bind(this));
+            await new Promise(resolve => setTimeout(resolve, this.POLL_INTERVAL_MS));
         }
         this.renderMessage("Payment received, confirming your order",
             '<p>This is taking longer than usual. Check your orders in a minute.</p>' +
