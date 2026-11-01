@@ -47,7 +47,7 @@ var ProductPage = {
             return;
         }
 
-        document.title = page.product.name + " - Artisan";
+        document.title = page.product.name + " - GharSe";
         page.render();
 
         // Availability and reviews load after the page is shown; a failure in
@@ -65,8 +65,8 @@ var ProductPage = {
 
         var sellerLink = p.sellerId !== null && p.sellerId !== undefined
             ? '<a href="seller-store.html?id=' + escapeAttr(encodeURIComponent(p.sellerId)) + '" class="text-link"><strong>' +
-                escapeHTML(p.sellerName || "Independent Artisan") + '</strong></a>'
-            : '<strong>' + escapeHTML(p.sellerName || "Independent Artisan") + '</strong>';
+                escapeHTML(p.sellerName || "Independent GharSe") + '</strong></a>'
+            : '<strong>' + escapeHTML(p.sellerName || "Independent GharSe") + '</strong>';
 
         var badges = '<span class="badge badge-success">' + escapeHTML(p.categoryName || "General") + '</span>';
         if (p.isVerified) badges += '<span class="badge badge-success">Lab-tested &amp; verified</span>';

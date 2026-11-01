@@ -4,7 +4,6 @@
  * Fills three areas on index.html from the backend:
  *   #homeCategoryGrid  categories from GET /v1/categories, each linking to
  *                      marketplace.html?category_id=<id>
- *   #homeTrendingGrid  products, sort "recommended" (verified first)
  *   #trendingProducts  products, sort "newest"
  * Each area shows a short message if it has no data or the request fails.
  *
@@ -15,7 +14,6 @@ var HomePage = {
 
     init: function () {
         this.fillCategories();
-        this.fill("homeTrendingGrid", "recommended");
         this.fill("trendingProducts", "newest");
     },
 

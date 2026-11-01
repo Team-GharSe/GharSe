@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Cart - Artisan</title>
+    <title>Explore Marketplace - GharSe</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,29 +15,13 @@
     <link rel="stylesheet" href="../../css/style.css">
     <link rel="stylesheet" href="../../css/components.css">
     <link rel="stylesheet" href="../../css/responsive.css">
-    <style>
-        [hidden] { display: none !important; }
-        .cart-layout { display: grid; grid-template-columns: 1fr; gap: 24px; margin-top: 20px; }
-        @media (min-width: 900px) { .cart-layout { grid-template-columns: 2fr 1fr; } }
-        .cart-lines { list-style: none; padding: 0; margin: 0; }
-        .cart-line { display: grid; grid-template-columns: 1fr auto; gap: 12px; padding: 18px 0; border-bottom: 1px solid #e5e5e5; }
-        .cart-line.is-unavailable { opacity: 0.6; }
-        .cart-line-price, .cart-note { color: var(--color-text-muted); font-size: 0.9rem; }
-        .cart-line-warning { color: #b00020; font-size: 0.9rem; margin-top: 4px; }
-        .qty-stepper { display: flex; align-items: center; gap: 6px; }
-        .qty-stepper input { width: 64px; text-align: center; }
-        .cart-line-total { text-align: right; display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
-        .cart-summary { padding: 20px; border: 1px solid #e5e5e5; border-radius: 12px; display: flex; flex-direction: column; gap: 14px; height: fit-content; }
-        .cart-subtotal { display: flex; justify-content: space-between; }
-    </style>
 </head>
 <body>
-
     <header class="site-header">
         <div class="container header-inner">
             <a href="../../index.html" class="brand">
-                <span class="brand-mark">A</span>
-                <span class="brand-name">Artisan</span>
+                <span class="brand-mark">G</span>
+                <span class="brand-name">GharSe</span>
             </a>
             <nav class="main-nav" aria-label="Main navigation"></nav>
             <button class="mobile-menu-button" id="mobileMenuButton" type="button" aria-label="Open navigation menu" aria-expanded="false">
@@ -49,26 +33,72 @@
     </header>
 
     <main class="section">
-        <div class="container" id="cartContainer">
-            <div class="state-box"><p>Loading your cart...</p></div>
+        <div class="container">
+            <div class="section-heading">
+                <span class="eyebrow">Handcrafted & Local</span>
+                <h2>Explore Marketplace</h2>
+                <p>Discover unique products made by independent women entrepreneurs.</p>
+            </div>
+
+            <!-- Controls: search, category, sort -->
+            <div class="filter-bar">
+                <input type="search" id="searchInput" class="form-control" placeholder="Search products or craft types..." aria-label="Search products" autocomplete="off">
+
+                <select id="categoryFilter" class="form-control" aria-label="Category">
+                    <option value="">All Categories</option>
+                </select>
+
+                <select id="sortFilter" class="form-control" aria-label="Sort products">
+                    <option value="recommended">Sort: Recommended</option>
+                    <option value="newest">Sort: Newest</option>
+                    <option value="price_asc">Price: Low to High</option>
+                    <option value="price_desc">Price: High to Low</option>
+                </select>
+            </div>
+
+            <!-- Controls: price range, near me -->
+            <div class="filter-row">
+                <div class="filter-price">
+                    <input type="number" id="minPrice" class="form-control" min="0" step="1" inputmode="numeric" placeholder="Min &#8377;" aria-label="Minimum price">
+                    <span>to</span>
+                    <input type="number" id="maxPrice" class="form-control" min="0" step="1" inputmode="numeric" placeholder="Max &#8377;" aria-label="Maximum price">
+                </div>
+
+                <button type="button" id="nearMeBtn" class="btn btn-secondary" aria-pressed="false">Near me</button>
+
+                <select id="radiusFilter" class="form-control" aria-label="Search radius" hidden>
+                    <option value="">Any distance</option>
+                    <option value="5">Within 5 km</option>
+                    <option value="10">Within 10 km</option>
+                    <option value="25">Within 25 km</option>
+                    <option value="50">Within 50 km</option>
+                </select>
+
+                <button type="button" id="clearFilters" class="btn btn-secondary">Clear filters</button>
+            </div>
+
+            <p id="filterMessage" class="form-error" role="alert" hidden></p>
+            <p id="resultsSummary" class="results-summary" aria-live="polite"></p>
+
+            <!-- Dynamic Product Grid -->
+            <div class="product-preview-grid" id="marketplaceGrid" aria-busy="false">
+                <!-- Populated by js/pages/public/marketplace.js -->
+            </div>
+
+            <nav id="pagination" class="pagination" aria-label="Pagination"></nav>
         </div>
     </main>
 
-    <footer class="site-footer">
-        <div class="container footer-bottom">
-            <span>© 2026 Artisan Marketplace</span>
-        </div>
-    </footer>
-
-    <script src="../../js/config.js"></script>
     <script src="../../js/core/utils.js"></script>
-    <script src="../../js/api.js"></script>
+    <script src="../../js/config.js"></script>
     <script src="../../js/auth.js"></script>
+    <script src="../../js/api.js"></script>
+    <script src="../../js/services/productService.js"></script>
     <script src="../../js/services/cartService.js"></script>
     <script src="../../js/toast.js"></script>
     <script src="../../js/cart-action.js"></script>
     <script src="../../js/nav.js"></script>
-    <script src="../../js/pages/marketplace/cart.js"></script>
-
+    <script src="../../js/core/app.js"></script>
+    <script src="../../js/pages/public/marketplace.js"></script>
 </body>
 </html>
