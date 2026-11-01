@@ -1,5 +1,5 @@
 /**
- * ARTISAN MARKETPLACE
+ * GHARSE MARKETPLACE
  * Utility Functions
  */
 

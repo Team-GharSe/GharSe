@@ -151,7 +151,7 @@ var CheckoutPage = {
             amount: order.amount,          // already in paise from the server
             currency: order.currency,
             order_id: order.razorpayOrderId,
-            name: "Artisan",
+            name: "GharSe",
             description: "Your order",
             handler: function () {
                 // UI feedback only. The order is confirmed by the status poll below.

@@ -38,7 +38,7 @@ var SellerStorePage = {
             return;
         }
 
-        document.title = seller.businessName + " - Artisan";
+        document.title = seller.businessName + " - GharSe";
         var ratingText = seller.averageRating === null
             ? "No reviews yet"
             : seller.averageRating.toFixed(1) + " average from " + seller.reviewCount +
@@ -112,7 +112,7 @@ var SellerStorePage = {
         this.container.innerHTML =
             '<div class="state-box">' +
                 '<h2>Store not found</h2>' +
-                '<p>This maker may no longer be on Artisan.</p>' +
+                '<p>This maker may no longer be on GharSe.</p>' +
                 '<a href="marketplace.html" class="btn btn-secondary">Return to marketplace</a>' +
             '</div>';
     },
