@@ -1,4 +1,3 @@
-
 /* =========================================
    HERO
 ========================================= */
@@ -120,6 +119,12 @@
     font-weight: 700;
 }
 
+.hero-image-card .image-placeholder span {
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
 .hero-floating-card {
     position: absolute;
     z-index: 3;
@@ -213,6 +218,15 @@
     gap: 20px;
 }
 
+.step-card {
+    transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.step-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-soft);
+}
+
 
 /* =========================================
    TRENDING
@@ -273,6 +287,8 @@
 
     font-family: "Manrope", sans-serif;
     font-weight: 700;
+
+    box-shadow: var(--shadow-soft);
 }
 
 .mission-content > p {
@@ -305,6 +321,9 @@
 }
 
 .seller-cta {
+    position: relative;
+    overflow: hidden;
+
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -315,6 +334,18 @@
     border-radius: 24px;
 
     background: var(--color-primary);
+}
+
+.seller-cta::after {
+    content: "";
+    position: absolute;
+    right: -60px;
+    top: -60px;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    pointer-events: none;
 }
 
 .seller-cta h2 {
@@ -329,4 +360,202 @@
 
 .seller-cta .eyebrow {
     color: rgba(255, 255, 255, 0.75);
+}
+
+
+/* =========================================
+   EYEBROW PILL (home page only)
+========================================= */
+
+.hero-content .eyebrow,
+.section-heading .eyebrow,
+.mission-content .eyebrow {
+    padding: 6px 12px;
+    border-radius: var(--radius-pill);
+    background: var(--color-primary-soft);
+}
+
+.seller-cta .eyebrow {
+    padding: 6px 12px;
+    border-radius: var(--radius-pill);
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.buyer-cta-section {
+    padding: 80px 0;
+}
+
+.buyer-cta {
+    text-align: center;
+}
+
+.buyer-cta h2 {
+    margin-top: 8px;
+}
+
+.buyer-cta p {
+    margin-top: 8px;
+    color: var(--color-text-secondary);
+}
+
+.buyer-cta .btn {
+    margin-top: 20px;
+}
+
+/* =========================================
+   ILLUSTRATIONS
+========================================= */
+
+/* Hero: landscape card so the wide scene is not cropped */
+.hero-image-main {
+    width: 100%;
+    max-width: 580px;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    border-radius: 28px;
+}
+
+.hero-art {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.how-section,
+.site-footer {
+    position: relative;
+    overflow: hidden;
+}
+
+.how-section > .container {
+    position: relative;
+    z-index: 1;
+}
+
+/* Step icons: no tinted box, drawing fills a clear area above the title */
+.step-icon {
+    width: 100%;
+    height: 150px;
+    margin-bottom: 22px;
+    background: none;
+    border-radius: 0;
+    display: block;
+}
+
+.step-art {
+    width: auto;
+    height: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+}
+
+/* Mission scene: fills the square, white background blends into the section */
+.mission-art {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 26px;
+    mix-blend-mode: multiply;
+    box-shadow: var(--shadow-soft);
+}
+
+/* Seller CTA: cream circle keeps the terracotta pot visible */
+.seller-art {
+    position: relative;
+    z-index: 1;
+    flex: 0 0 200px;
+    width: 200px;
+    height: 200px;
+    padding: 22px;
+    border-radius: 50%;
+    background: var(--color-background);
+    display: grid;
+    place-items: center;
+}
+
+.seller-art img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+}
+
+/* Buyer CTA: basket above the eyebrow */
+.buyer-art {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 10px;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+}
+
+/* Olive sprigs: faint decoration */
+.deco-sprig {
+    position: absolute;
+    width: 260px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.deco-sprig-steps {
+    top: 30px;
+    left: -30px;
+    opacity: 0.3;
+    transform: rotate(-8deg);
+    mix-blend-mode: multiply;
+}
+
+.deco-sprig-footer {
+    top: 10px;
+    right: 4%;
+    width: 180px;
+    opacity: 0.12;
+    filter: brightness(0) invert(1);
+}
+
+/* Category tiles: drawing in the top-right corner */
+.category-art {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 72px;
+    height: 72px;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+}
+
+/* Product cards without a photo: drawing centred on the gradient tile */
+.product-card-media .card-art {
+    width: 60%;
+    height: 60%;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+}
+
+@media (max-width: 900px) {
+    .hero-image-main {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 700px) {
+    .seller-art {
+        display: none;
+    }
+
+    .buyer-art {
+        width: 150px;
+        height: 150px;
+    }
+
+    .deco-sprig {
+        width: 150px;
+    }
+
+    .step-icon {
+        height: 130px;
+    }
 }

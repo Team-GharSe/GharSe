@@ -1,4 +1,3 @@
-
 /* =========================================
    GLOBAL RESET
 ========================================= */
@@ -39,6 +38,24 @@ button {
 a {
     color: inherit;
     text-decoration: none;
+}
+
+/* Keyboard focus, visible for everyone */
+:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+/* Respect users who turn off motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
 }
 
 
@@ -190,25 +207,34 @@ p {
 
     font-size: 0.9rem;
     font-weight: 600;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
 
     transition:
         transform var(--transition),
         background-color var(--transition),
         border-color var(--transition),
-        color var(--transition);
+        color var(--transition),
+        box-shadow var(--transition);
 }
 
 .btn:hover {
     transform: translateY(-2px);
 }
 
+.btn:active {
+    transform: translateY(0);
+}
+
 .btn-primary {
     background: var(--color-primary);
     color: white;
+    box-shadow: 0 6px 16px rgba(197, 104, 79, 0.22);
 }
 
 .btn-primary:hover {
     background: var(--color-primary-dark);
+    box-shadow: 0 10px 24px rgba(197, 104, 79, 0.30);
 }
 
 .btn-secondary {
@@ -219,6 +245,8 @@ p {
 
 .btn-secondary:hover {
     background: var(--color-surface);
+    border-color: var(--color-primary);
+    color: var(--color-primary-dark);
 }
 
 .btn-light {
@@ -317,6 +345,7 @@ p {
 }
 
 .nav-link {
+    position: relative;
     color: var(--color-text-secondary);
     font-size: 0.9rem;
     font-weight: 500;
@@ -324,9 +353,25 @@ p {
     transition: color var(--transition);
 }
 
+.nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    width: 0;
+    height: 2px;
+    background: var(--color-primary);
+    transition: width var(--transition);
+}
+
 .nav-link:hover,
 .nav-link.active {
     color: var(--color-text);
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+    width: 100%;
 }
 
 .nav-cta {
@@ -422,4 +467,17 @@ p {
 
     color: #88827d;
     font-size: 0.8rem;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    right: -80px;
+    bottom: -80px;
+    width: 300px;
+    height: 300px;
+    background: url("../images/illustrations/olive-branch.webp") no-repeat center / contain;
+    opacity: 0.08;
+    pointer-events: none;
+    z-index: 0;
 }
