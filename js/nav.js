@@ -71,6 +71,8 @@ var Nav = {
             '<a href="' + root + 'pages/seller/dashboard.html" class="nav-link">Dashboard</a>' +
             '<a href="' + root + 'pages/seller/products.html" class="nav-link">Products</a>' +
             '<a href="' + root + 'pages/seller/orders.html" class="nav-link">Orders</a>' +
+            '<a href="' + root + 'pages/seller/analytics.html" class="nav-link">Analytics</a>' +
+            '<a href="' + root + 'pages/seller/trends.html" class="nav-link">Trends</a>' +
             '<div class="nav-profile-dropdown">' +
                 '<button class="nav-link nav-profile-trigger" id="navProfileTrigger" type="button">Account</button>' +
                 '<div class="nav-profile-menu" id="navProfileMenu">' +
