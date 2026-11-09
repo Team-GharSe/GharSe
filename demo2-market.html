@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GharSe demo v2: explore</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Caveat:wght@700&family=DM+Mono:wght@400;500&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="demo2.css">
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/MotionPathPlugin.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Flip.min.js"></script>
+  <script defer src="demo2.js"></script>
+</head>
+<body data-page="market" data-theme="cream">
+
+<div class="page">
+  <header data-chrome="header"></header>
+
+  <main>
+    <!-- Medium intensity: personality in the header and tags, calm reading area -->
+    <section class="page-head">
+      <div class="wrap">
+        <p class="hand">the wall near you</p>
+        <h1>Pinned within <span class="hl">walking</span> distance.</h1>
+      </div>
+    </section>
+
+    <!-- "menu board" filter strip, chalk style, sticky -->
+    <div class="menu" role="region" aria-label="Filters">
+      <div class="wrap">
+        <div class="chips">
+          <button class="chip" type="button" data-cat="all" aria-pressed="true">Everything</button>
+          <button class="chip" type="button" data-cat="bakes" aria-pressed="false">Bakes</button>
+          <button class="chip" type="button" data-cat="pottery" aria-pressed="false">Pottery</button>
+          <button class="chip" type="button" data-cat="tailoring" aria-pressed="false">Tailoring</button>
+          <button class="chip" type="button" data-cat="pickles" aria-pressed="false">Pickles &amp; spice</button>
+          <button class="chip" type="button" data-cat="crafts" aria-pressed="false">Crafts</button>
+        </div>
+        <button class="chip" id="verified" type="button" aria-pressed="false">Verified only</button>
+        <label>Within <input id="radius" type="range" min="2" max="10" step="1" value="10"> <output id="radius-out">10 km</output></label>
+        <label class="menu__push">Sort
+          <select id="sort">
+            <option value="near">Nearest first</option>
+            <option value="low">Price: low to high</option>
+            <option value="high">Price: high to low</option>
+          </select>
+        </label>
+      </div>
+    </div>
+
+    <section class="results">
+      <div class="wrap">
+        <p class="results__count" id="count" aria-live="polite"></p>
+        <div class="tags" id="tags" data-render="tags" data-specials="1" data-offset="1"></div>
+
+        <div class="empty is-hidden" id="empty">
+          <p class="hand" style="color:var(--terracotta)">nothing pinned here yet.</p>
+          <h2>Try stretching the radius.</h2>
+          <p style="margin:1rem 0 1.4rem">Or clear the filters and see the whole lane.</p>
+          <button class="btn" id="reset" type="button">Clear filters</button>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<footer data-chrome="footer"></footer>
+
+</body>
+</html>
