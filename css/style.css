@@ -481,3 +481,30 @@ body::before {
     pointer-events: none;
     z-index: 0;
 }
+
+/* =========================================
+   PAGE DECORATIONS (drawings in side margins)
+========================================= */
+
+.page-decor {
+    position: absolute;
+    z-index: 0;
+    pointer-events: none;
+    mix-blend-mode: multiply;
+}
+
+/* Content sits above decorations. The header is left alone
+   so its sticky position and high z-index still work. */
+main,
+.site-footer {
+    position: relative;
+    z-index: 1;
+}
+
+.page-decor-left {
+    left: -40px;
+}
+
+.page-decor-right {
+    right: -40px;
+}

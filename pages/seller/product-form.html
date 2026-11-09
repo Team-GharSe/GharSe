@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product Details - GharSe</title>
+    <title>Product - GharSe Seller</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -34,8 +34,120 @@
     </header>
 
     <main class="section">
-        <div class="container" id="productContainer">
-            <!-- Rendered by js/pages/public/product.js -->
+        <div class="container" style="max-width: 760px;">
+
+            <a href="products.html" class="back-link">← Back to your products</a>
+
+            <h1 id="formTitle">Add product</h1>
+
+            <div id="formAlert" class="form-error" role="alert" hidden></div>
+
+            <form id="productForm" novalidate>
+
+                <div class="form-group">
+                    <label class="form-label" for="name">Product name</label>
+                    <input class="form-control" id="name" name="name" type="text" maxlength="150" placeholder="For example, Mango pickle, 500 g">
+                    <span class="form-error" data-error-for="name"></span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="description">Description</label>
+                    <textarea class="form-control" id="description" name="description" rows="4" maxlength="5000" placeholder="What is it made from? How is it made?"></textarea>
+                    <span class="form-error" data-error-for="description"></span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="price">Price (₹)</label>
+                    <input class="form-control" id="price" name="price" type="number" min="0.01" step="0.01" placeholder="0.00">
+                    <span class="form-error" data-error-for="price"></span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="categoryId">Category</label>
+                    <select class="form-control" id="categoryId" name="categoryId">
+                        <option value="">Loading categories...</option>
+                    </select>
+                    <span class="form-error" data-error-for="categoryId"></span>
+                </div>
+
+                <fieldset class="form-group" style="border: 0; padding: 0;">
+                    <legend class="form-label">How is it fulfilled?</legend>
+                    <label style="display: flex; gap: 8px; align-items: center;">
+                        <input type="radio" name="fulfilmentType" value="READY_STOCK">
+                        Ready stock (I have items on hand)
+                    </label>
+                    <label style="display: flex; gap: 8px; align-items: center; margin-top: 6px;">
+                        <input type="radio" name="fulfilmentType" value="MADE_TO_ORDER">
+                        Made to order (I make it after the order)
+                    </label>
+                    <span class="form-error" data-error-for="fulfilmentType"></span>
+                </fieldset>
+
+                <div class="form-group" id="readyStockRow" hidden>
+                    <label class="form-label" for="inventoryQty">Items in stock</label>
+                    <input class="form-control" id="inventoryQty" name="inventoryQty" type="number" min="0" step="1" placeholder="0">
+                    <span class="form-error" data-error-for="inventoryQty"></span>
+                </div>
+
+                <div class="form-group" id="madeToOrderRow" hidden>
+                    <label class="form-label" for="productionTime">Time needed to make one unit</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input class="form-control" id="productionTime" name="productionTime" type="number" min="1" step="1" placeholder="2">
+                        <select class="form-control" id="productionTimeUnit" name="productionTimeUnit" style="width: auto; min-width: 130px;">
+                            <option value="1">Minutes</option>
+                            <option value="60">Hours</option>
+                            <option value="1440">Days</option>
+                        </select>
+                    </div>
+                    <span class="form-error" data-error-for="productionTimeMinutesPerUnit"></span>
+                </div>
+
+                <fieldset class="form-group" style="border: 0; padding: 0;">
+                    <legend class="form-label">Ways to receive it</legend>
+                    <label style="display: flex; gap: 8px; align-items: center;">
+                        <input type="checkbox" id="supportsSelfDelivery" name="supportsSelfDelivery">
+                        Self delivery by me
+                    </label>
+                    <label style="display: flex; gap: 8px; align-items: center; margin-top: 6px;">
+                        <input type="checkbox" id="supportsPickup" name="supportsPickup">
+                        Buyer picks up
+                    </label>
+                    <label style="display: flex; gap: 8px; align-items: center; margin-top: 6px;">
+                        <input type="checkbox" id="supportsPostal" name="supportsPostal">
+                        Postal courier
+                    </label>
+                </fieldset>
+
+                <div class="form-group" id="radiusRow" hidden>
+                    <label class="form-label" for="deliveryRadiusKm">Delivery radius (km)</label>
+                    <input class="form-control" id="deliveryRadiusKm" name="deliveryRadiusKm" type="number" min="0.1" step="0.1" placeholder="5">
+                    <span class="form-error" data-error-for="deliveryRadiusKm"></span>
+                </div>
+
+                <fieldset class="form-group" style="border: 0; padding: 0;">
+                    <legend class="form-label">Photos (up to 3)</legend>
+
+                    <p id="photoNote" class="form-hint" style="color: var(--color-text-muted);">
+                        Save the product first, then you can add photos.
+                    </p>
+
+                    <div id="photoGrid" style="display: flex; flex-wrap: wrap; gap: 12px;"></div>
+
+                    <label id="photoAddLabel" class="btn btn-secondary" style="margin-top: 12px;" hidden>
+                        Add photos
+                        <input id="photoInput" type="file" accept="image/jpeg,image/png,image/webp" multiple hidden>
+                    </label>
+
+                    <span id="photoError" class="form-error"></span>
+                </fieldset>
+
+                <div style="display: flex; gap: 12px; margin-top: 24px;">
+                    <button id="submitBtn" class="btn btn-primary btn-large" type="submit">Save product</button>
+                    <a href="products.html" class="btn btn-secondary btn-large">Cancel</a>
+                </div>
+
+            </form>
+
         </div>
     </main>
 
@@ -44,11 +156,10 @@
     <script src="../../js/auth.js"></script>
     <script src="../../js/api.js"></script>
     <script src="../../js/services/productService.js"></script>
-    <script src="../../js/services/cartService.js"></script>
     <script src="../../js/toast.js"></script>
-    <script src="../../js/cart-action.js"></script>
     <script src="../../js/nav.js"></script>
-    <script src="../../js/core/app.js"></script>
-    <script src="../../js/pages/public/product.js"></script>
+    <script src="../../js/pages/seller/seller-guard.js"></script>
+    <script src="../../js/pages/seller/product-form.js"></script>
+    <script src="../../js/core/decor.js"></script>
 </body>
 </html>
