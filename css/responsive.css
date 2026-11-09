@@ -1,0 +1,226 @@
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 900px) {
+
+    .hero-grid {
+        grid-template-columns: 1fr;
+        gap: 50px;
+    }
+
+    .hero-content {
+        text-align: center;
+    }
+
+    .hero-description {
+        margin-inline: auto;
+    }
+
+    .hero-actions {
+        justify-content: center;
+    }
+
+    .hero-trust {
+        justify-content: center;
+    }
+
+    .hero-visual {
+        min-height: 460px;
+    }
+
+    .steps-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .mission-grid {
+        grid-template-columns: 1fr;
+        gap: 50px;
+    }
+
+    .mission-image-placeholder {
+        max-width: 600px;
+        margin-inline: auto;
+    }
+
+    .category-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .footer-grid {
+        grid-template-columns: 2fr 1fr 1fr;
+    }
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 700px) {
+
+    .container {
+        width: min(
+            calc(100% - 28px),
+            var(--container-width)
+        );
+    }
+
+    .section {
+        padding: 75px 0;
+    }
+
+    .site-header {
+        position: relative;
+    }
+
+    .main-nav {
+        display: none; /* Keeps menu hidden by default on mobile */
+        position: absolute;
+        top: 76px;
+        left: 14px;
+        right: 14px;
+        padding: 18px;
+        flex-direction: column;
+        align-items: stretch;
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-medium);
+        box-shadow: var(--shadow-medium);
+        z-index: 99;
+    }
+
+    .main-nav.open {
+        display: flex !important; /* Shows menu when toggled open */
+    }
+
+    .nav-link {
+        padding: 9px 4px;
+    }
+
+    .nav-cta {
+        margin-top: 4px;
+        margin-left: 0;
+    }
+
+    .mobile-menu-button {
+        display: flex;
+    }
+
+    .nav-greeting {
+        padding: 6px 4px;
+    }
+
+    .nav-profile-menu {
+        position: static;
+        box-shadow: none;
+        border: none;
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+        display: none;
+        margin-top: 4px;
+        padding-left: 8px;
+    }
+
+    .nav-profile-menu.open {
+        display: flex;
+    }
+
+    .hero-section {
+        padding: 60px 0 75px;
+    }
+
+    .hero-content h1 {
+        font-size: clamp(2.5rem, 12vw, 4rem);
+    }
+
+    .hero-description {
+        font-size: 0.95rem;
+    }
+
+    .hero-actions {
+        flex-direction: column;
+    }
+
+    .hero-actions .btn {
+        width: 100%;
+    }
+
+    .btn-large {
+        min-height: 50px;
+    }
+
+    .hero-trust {
+        gap: 12px;
+    }
+
+    .trust-item span {
+        font-size: 0.6rem;
+    }
+
+    .hero-visual {
+        min-height: 380px;
+    }
+
+    .hero-image-card {
+        width: 85%;
+    }
+
+    .hero-floating-card {
+        left: 0;
+        bottom: 20px;
+    }
+
+    .section-heading-row {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .product-preview-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .category-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .category-card {
+        min-height: 120px;
+    }
+
+    .product-card-body {
+        padding: 14px 14px 16px;
+    }
+
+    .seller-cta {
+        align-items: flex-start;
+        flex-direction: column;
+
+        padding: 35px 25px;
+    }
+
+    .seller-cta h2 {
+        font-size: 1.8rem;
+    }
+
+    .seller-cta .btn {
+        width: 100%;
+    }
+
+    .footer-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 40px 25px;
+    }
+
+    .footer-brand {
+        grid-column: 1 / -1;
+    }
+
+    .footer-bottom {
+        align-items: flex-start;
+        flex-direction: column;
+        justify-content: center;
+        gap: 4px;
+    }
+}

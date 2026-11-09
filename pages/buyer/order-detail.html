@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order details - GharSe</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/components.css">
+    <link rel="stylesheet" href="../../css/responsive.css">
+    <style>
+        [hidden] { display: none !important; }
+        .tracker { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 24px 0; }
+        .step { text-align: center; padding: 10px 6px; border-radius: 8px; background: #f3efe9; color: var(--color-text-muted, #6b6b6b); font-size: 0.85rem; }
+        .step.done { background: #e3f1e6; color: #1d5b2a; }
+        .step.current { background: #1d5b2a; color: #fff; font-weight: 700; }
+        .order-items { display: grid; gap: 12px; margin-top: 16px; }
+        .order-item { padding: 14px; border-radius: 10px; background: #f7f4ef; }
+        .review-form { display: grid; gap: 10px; margin-top: 12px; padding-top: 12px; border-top: 1px solid #e6e1d8; }
+        .review-form label { display: grid; gap: 4px; font-weight: 600; font-size: 0.9rem; }
+        .form-alert { margin-top: 16px; padding: 12px 14px; border-radius: 8px; background: #fdecea; color: #7a1d14; }
+        .muted { color: var(--color-text-muted, #6b6b6b); }
+        .field-error { color: #b42318; font-size: 0.85rem; }
+    </style>
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="../marketplace/marketplace.html" class="brand">
+                <span class="brand-mark">G</span>
+                <span class="brand-name">GharSe</span>
+            </a>
+            <nav class="main-nav" aria-label="Main navigation"></nav>
+        </div>
+    </header>
+
+    <main class="section">
+        <div class="container">
+            <a href="orders.html" class="text-link back-link">&larr; Back to my orders</a>
+            <h1 id="orderTitle" style="font-size: 1.8rem; margin-top: 12px;">Order details</h1>
+
+            <div id="pageAlert" class="form-alert" role="alert" hidden></div>
+
+            <div id="cancelledNote" class="muted" hidden></div>
+
+            <div id="tracker" class="tracker" aria-label="Order progress" hidden></div>
+
+            <p id="orderMeta" class="muted"></p>
+
+            <h2 style="font-size: 1.2rem; margin-top: 24px;">Items</h2>
+            <div id="items" class="order-items"></div>
+        </div>
+    </main>
+
+    <script src="../../js/config.js"></script>
+    <script src="../../js/core/utils.js"></script>
+    <script src="../../js/api.js"></script>
+    <script src="../../js/auth.js"></script>
+    <script src="../../js/toast.js"></script>
+    <script src="../../js/nav.js"></script>
+    <script src="../../js/pages/buyer/order-detail.js"></script>
+    <script src="../../js/core/decor.js"></script>
+</body>
+</html>

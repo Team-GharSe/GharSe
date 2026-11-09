@@ -1,0 +1,510 @@
+/* =========================================
+   GLOBAL RESET
+========================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: "Inter", sans-serif;
+    background: #faf8f5;
+    color: #292725;
+    line-height: 1.6;
+}
+
+img {
+    display: block;
+    max-width: 100%;
+}
+
+button,
+input,
+textarea,
+select {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* Keyboard focus, visible for everyone */
+:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+/* Respect users who turn off motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+
+/* =========================================
+   DESIGN TOKENS
+========================================= */
+
+:root {
+
+    --color-background: #faf8f5;
+    --color-surface: #ffffff;
+    --color-surface-soft: #f3eee8;
+
+    --color-text: #292725;
+    --color-text-secondary: #706b66;
+    --color-text-muted: #98918a;
+
+    --color-primary: #c5684f;
+    --color-primary-dark: #a9513b;
+    --color-primary-soft: #f3dfd7;
+
+    --color-secondary: #71816b;
+    --color-secondary-soft: #e5ebe2;
+
+    --color-border: #e7e1db;
+
+    --color-success: #5d8060;
+    --color-warning: #c08b48;
+    --color-error: #b85757;
+
+    --radius-small: 8px;
+    --radius-medium: 14px;
+    --radius-large: 22px;
+    --radius-pill: 999px;
+
+    --shadow-soft: 0 8px 30px rgba(48, 40, 34, 0.06);
+    --shadow-medium: 0 15px 45px rgba(48, 40, 34, 0.10);
+
+    --container-width: 1180px;
+
+    --transition: 180ms ease;
+}
+
+
+/* =========================================
+   CONTAINER
+========================================= */
+
+.container {
+    width: min(
+        calc(100% - 40px),
+        var(--container-width)
+    );
+
+    margin-inline: auto;
+}
+
+
+/* =========================================
+   TYPOGRAPHY
+========================================= */
+
+h1,
+h2,
+h3,
+h4 {
+    font-family: "Manrope", sans-serif;
+    line-height: 1.15;
+    color: var(--color-text);
+}
+
+h1 {
+    font-size: clamp(2.8rem, 6vw, 5.2rem);
+    letter-spacing: -0.045em;
+}
+
+h2 {
+    font-size: clamp(2rem, 4vw, 3.3rem);
+    letter-spacing: -0.035em;
+}
+
+h3 {
+    font-size: 1.2rem;
+}
+
+p {
+    color: var(--color-text-secondary);
+}
+
+
+/* =========================================
+   SECTION
+========================================= */
+
+.section {
+    padding: 110px 0;
+}
+
+.section-heading {
+    margin-bottom: 55px;
+}
+
+.section-heading.centered {
+    max-width: 650px;
+    margin-inline: auto;
+    text-align: center;
+}
+
+.section-heading h2 {
+    margin-top: 10px;
+}
+
+.section-heading p {
+    margin-top: 18px;
+}
+
+
+/* =========================================
+   EYEBROW
+========================================= */
+
+.eyebrow {
+    display: inline-block;
+
+    font-size: 0.76rem;
+    font-weight: 700;
+
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+
+    color: var(--color-primary);
+}
+
+
+/* =========================================
+   BUTTONS
+========================================= */
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 44px;
+    padding: 0 20px;
+
+    border: 1px solid transparent;
+    border-radius: var(--radius-pill);
+
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+
+    transition:
+        transform var(--transition),
+        background-color var(--transition),
+        border-color var(--transition),
+        color var(--transition),
+        box-shadow var(--transition);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.btn-primary {
+    background: var(--color-primary);
+    color: white;
+    box-shadow: 0 6px 16px rgba(197, 104, 79, 0.22);
+}
+
+.btn-primary:hover {
+    background: var(--color-primary-dark);
+    box-shadow: 0 10px 24px rgba(197, 104, 79, 0.30);
+}
+
+.btn-secondary {
+    background: transparent;
+    border-color: var(--color-border);
+    color: var(--color-text);
+}
+
+.btn-secondary:hover {
+    background: var(--color-surface);
+    border-color: var(--color-primary);
+    color: var(--color-primary-dark);
+}
+
+.btn-light {
+    background: white;
+    color: var(--color-primary-dark);
+}
+
+.btn-large {
+    min-height: 54px;
+    padding-inline: 28px;
+    font-size: 0.95rem;
+}
+
+
+/* =========================================
+   TEXT LINK
+========================================= */
+
+.text-link {
+    color: var(--color-primary);
+    font-weight: 600;
+    transition: color var(--transition);
+}
+
+.text-link:hover {
+    color: var(--color-primary-dark);
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+.site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+
+    background: rgba(250, 248, 245, 0.94);
+    backdrop-filter: blur(14px);
+
+    border-bottom: 1px solid rgba(231, 225, 219, 0.75);
+}
+
+.header-inner {
+    min-height: 76px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+}
+
+
+/* =========================================
+   BRAND
+========================================= */
+
+.brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+
+    font-family: "Manrope", sans-serif;
+    font-weight: 800;
+}
+
+.brand-mark {
+    width: 34px;
+    height: 34px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 10px;
+
+    background: var(--color-primary);
+    color: white;
+
+    font-size: 0.9rem;
+}
+
+.brand-name {
+    font-size: 1.1rem;
+}
+
+
+/* =========================================
+   NAVIGATION
+========================================= */
+
+.main-nav {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+}
+
+.nav-link {
+    position: relative;
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+    font-weight: 500;
+
+    transition: color var(--transition);
+}
+
+.nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    width: 0;
+    height: 2px;
+    background: var(--color-primary);
+    transition: width var(--transition);
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: var(--color-text);
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+    width: 100%;
+}
+
+.nav-cta {
+    margin-left: 4px;
+}
+
+.mobile-menu-button {
+    display: none;
+
+    width: 42px;
+    height: 42px;
+
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+
+    background: var(--color-surface);
+
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.mobile-menu-button span {
+    width: 18px;
+    height: 2px;
+    background: var(--color-text);
+}
+
+
+/* =========================================
+   FOOTER
+========================================= */
+
+.site-footer {
+    padding-top: 80px;
+
+    background: #292725;
+    color: white;
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 50px;
+
+    padding-bottom: 70px;
+}
+
+.brand-footer .brand-name {
+    color: white;
+}
+
+.footer-brand p {
+    max-width: 350px;
+    margin-top: 20px;
+
+    color: #b9b3ad;
+}
+
+.footer-column {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.footer-column h3 {
+    margin-bottom: 8px;
+
+    color: white;
+    font-size: 0.9rem;
+}
+
+.footer-column a {
+    color: #aaa49f;
+    font-size: 0.9rem;
+
+    transition: color var(--transition);
+}
+
+.footer-column a:hover {
+    color: white;
+}
+
+.footer-bottom {
+    min-height: 70px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+
+    color: #88827d;
+    font-size: 0.8rem;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    right: -80px;
+    bottom: -80px;
+    width: 300px;
+    height: 300px;
+    background: url("../images/illustrations/olive-branch.webp") no-repeat center / contain;
+    opacity: 0.08;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* =========================================
+   PAGE DECORATIONS (drawings in side margins)
+========================================= */
+
+.page-decor {
+    position: absolute;
+    z-index: 0;
+    pointer-events: none;
+    mix-blend-mode: multiply;
+}
+
+/* Content sits above decorations. The header is left alone
+   so its sticky position and high z-index still work. */
+main,
+.site-footer {
+    position: relative;
+    z-index: 1;
+}
+
+.page-decor-left {
+    left: -40px;
+}
+
+.page-decor-right {
+    right: -40px;
+}
