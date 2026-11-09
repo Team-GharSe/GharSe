@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your products - GharSe Seller</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/components.css">
+    <link rel="stylesheet" href="../../css/responsive.css">
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="../../index.html" class="brand">
+                <span class="brand-mark">G</span>
+                <span class="brand-name">GharSe</span>
+            </a>
+            <nav class="main-nav" aria-label="Main navigation"></nav>
+            <button class="mobile-menu-button" id="mobileMenuButton" type="button" aria-label="Open navigation menu" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <main class="section">
+        <div class="container">
+
+            <div class="products-toolbar">
+                <div>
+                    <span class="eyebrow">Your store</span>
+                    <h1 style="margin-top: 8px;">Your products</h1>
+                    <p id="productCounts" class="seller-product-meta"></p>
+                </div>
+
+                <a href="product-form.html" class="btn btn-primary btn-large">Add product</a>
+            </div>
+
+            <div class="product-tabs" role="tablist">
+                <button type="button" class="product-tab" data-filter="active" role="tab">Active</button>
+                <button type="button" class="product-tab" data-filter="removed" role="tab">Removed</button>
+            </div>
+
+            <div id="productList" class="product-list" aria-live="polite">
+                <div class="state-box"><p>Loading your products...</p></div>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="../../js/core/utils.js"></script>
+    <script src="../../js/config.js"></script>
+    <script src="../../js/auth.js"></script>
+    <script src="../../js/api.js"></script>
+    <script src="../../js/services/productService.js"></script>
+    <script src="../../js/toast.js"></script>
+    <script src="../../js/nav.js"></script>
+    <script src="../../js/pages/seller/seller-guard.js"></script>
+    <script src="../../js/pages/seller/products.js"></script>
+    <script src="../../js/core/decor.js"></script>
+</body>
+</html>
