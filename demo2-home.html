@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GharSe demo v2: home</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Caveat:wght@700&family=DM+Mono:wght@400;500&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="demo2.css">
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/MotionPathPlugin.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Flip.min.js"></script>
+  <script defer src="demo2.js"></script>
+</head>
+<body data-page="home" data-theme="cream">
+
+<div class="page">
+  <header data-chrome="header"></header>
+
+  <main>
+    <!-- 1. HERO: loud. A sentence builder replaces the usual search bar. -->
+    <section class="hero">
+      <div class="wrap">
+        <div>
+          <p class="hand" data-hero style="color:var(--cream)">mumbai's home makers, pinned up in one place</p>
+          <h1>Somebody <span class="pill"></span> near you is <span class="pill pill--teal"></span> <span class="hl">baking</span> right now.</h1>
+          <p class="hero__sub" data-hero>Bakers, potters and tailors working from their own kitchens, a few lanes away.</p>
+
+          <form class="finder" data-hero action="demo2-market.html">
+            <span>I'm after</span>
+            <select aria-label="What are you after" name="c">
+              <option>bread</option><option>pottery</option><option>a kurta</option><option>pickles</option><option>gifts</option>
+            </select>
+            <span>near</span>
+            <input aria-label="Your area" name="area" value="Andheri" autocomplete="off">
+            <button class="btn" type="submit">Go →</button>
+          </form>
+        </div>
+
+        <!-- placeholder tags: swap the photo boxes for illustrations later -->
+        <div class="hero__cluster" data-parallax="12">
+          <article class="tag tag--mini float" data-cat="bakes" style="--r:-5deg;left:0;top:30px;--d:0s">
+            <i class="tag__pin"></i>
+            <div class="tag__media"><span>photo</span></div>
+            <span class="stamp">₹180</span>
+            <div class="tag__body"><h3>Sourdough</h3><p class="tag__note">baked at 5am</p></div>
+          </article>
+          <article class="tag tag--mini float" data-cat="pottery" style="--r:4deg;right:0;top:120px;--d:-2s">
+            <i class="tag__pin"></i>
+            <div class="tag__media"><span>photo</span></div>
+            <span class="stamp">₹650</span>
+            <div class="tag__body"><h3>Chai cups</h3><p class="tag__note">no two alike</p></div>
+          </article>
+          <article class="tag tag--mini float" data-cat="tailoring" style="--r:-2deg;left:60px;bottom:0;--d:-4s">
+            <i class="tag__pin"></i>
+            <div class="tag__media"><span>photo</span></div>
+            <span class="stamp">₹1450</span>
+            <div class="tag__body"><h3>Block-print kurta</h3><p class="tag__note">made to order</p></div>
+          </article>
+          <span class="sticker sticker--hand live" style="right:6%;top:0;--r:5deg">baking now · 0.8 km</span>
+          <span class="sticker sticker--red" style="left:2%;bottom:36%;--r:-8deg">Verified</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. MARQUEE: reacts to scroll speed and direction -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee__track">
+        <span>Bakers</span><span>Potters</span><span>Tailors</span><span>Pickle makers</span><span>Jewellers</span><span>Crafters</span>
+        <span>Bakers</span><span>Potters</span><span>Tailors</span><span>Pickle makers</span><span>Jewellers</span><span>Crafters</span>
+      </div>
+    </div>
+
+    <!-- 3. MANIFESTO: running text instead of heading + subtitle + grid -->
+    <section class="manifesto" data-theme="cream">
+      <div class="wrap">
+        <span class="hand annot">(yes, real people. no warehouses.)</span>
+        <p>
+          GharSe is a noticeboard for the lane you live on. <span class="pill pill--clay"></span>
+          Meena bakes sourdough at 5am. Sunita spins clay cups on her balcony. <span class="pill pill--sage"></span>
+          Farida stitches block-print kurtas till late. None of them has a shop.
+          Between them, <span class="count" data-count="120" data-suffix="+">120+</span> makers across
+          <span class="count" data-count="9">9</span> neighbourhoods, and every one just got <span class="big">a wall.</span>
+        </p>
+      </div>
+    </section>
+
+    <!-- 4. SHELF: objects on planks. Labels are tags, not card titles. Shapes are stand-ins for art. -->
+    <section class="shelf" data-theme="sand">
+      <div class="wrap">
+        <div class="shelf__intro">
+          <h2>Start with what you need</h2>
+          <span class="hand">(tap anything on the shelf)</span>
+        </div>
+
+        <div class="shelf__row">
+          <a class="thing" href="demo2-market.html" style="--r:-3deg;--w:150px;--h:150px;--c:var(--orange)">
+            <span class="thing__shape"></span><span class="thing__label">bakes <small>34</small></span>
+          </a>
+          <a class="thing" href="demo2-market.html" style="--r:2deg;--w:130px;--h:150px;--c:var(--terracotta);--br:50% 50% 24px 24px / 44% 44% 24px 24px;--y:4px">
+            <span class="thing__shape shape--pot"></span><span class="thing__label">pottery <small>12</small></span>
+          </a>
+          <a class="thing" href="demo2-market.html" style="--r:-1.5deg;--w:100px;--h:150px;--c:var(--teal);--br:14px">
+            <span class="thing__shape"></span><span class="thing__label">tailoring <small>21</small></span>
+          </a>
+          <a class="thing" href="demo2-market.html" style="--r:3deg;--w:110px;--h:130px;--c:var(--butter);--br:16px">
+            <span class="thing__shape shape--jar"></span><span class="thing__label">pickles <small>9</small></span>
+          </a>
+        </div>
+
+        <div class="shelf__row">
+          <a class="thing" href="demo2-market.html" style="--r:2deg;--w:140px;--h:110px;--c:var(--sage);--br:140px 140px 18px 18px / 110px 110px 18px 18px">
+            <span class="thing__shape"></span><span class="thing__label">spices <small>7</small></span>
+          </a>
+          <a class="thing" href="demo2-market.html" style="--r:-2deg;--w:120px;--h:120px;--c:var(--peach);--br:12px">
+            <span class="thing__shape shape--gift"></span><span class="thing__label">gifts <small>15</small></span>
+          </a>
+          <a class="thing" href="demo2-market.html" style="--r:3deg;--w:90px;--h:150px;--c:var(--chilli);--br:45px">
+            <span class="thing__shape"></span><span class="thing__label">crafts <small>18</small></span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. NOTICEBOARD: hang-tag cards, staggered. Rendered by demo2.js from sample data. -->
+    <section class="board" data-theme="cream">
+      <div class="wrap">
+        <div class="board__head">
+          <div class="note-title">
+            <p class="hand">pinned this week</p>
+            <h2>Fresh tags on the wall</h2>
+          </div>
+          <p class="hand board__aside">new tags every morning. most are gone by evening.</p>
+        </div>
+        <div class="tags" data-render="tags" data-limit="6" data-offset="1"></div>
+        <p style="margin-top:1rem"><a class="btn" href="demo2-market.html">See the whole wall →</a></p>
+      </div>
+    </section>
+
+    <!-- 6. STORY: pinned on desktop; the scooter follows the route as you scroll -->
+    <div class="theme-zone" data-theme="teal">
+      <section class="story">
+        <div class="wrap">
+          <p class="hand">follow the parcel</p>
+          <h2>From her stove to your doorstep. <span class="hl">Usually before the chai cools.</span></h2>
+
+          <div class="story__stage">
+            <svg viewBox="0 0 1000 380" role="img" aria-label="A scooter carries a parcel from the maker's kitchen to your door">
+              <path id="route-ghost" d="M110,290 C260,300 280,120 500,130 C700,140 740,300 890,280" fill="none" stroke="#F7EBD7" stroke-opacity=".35" stroke-width="4" stroke-dasharray="2 12" stroke-linecap="round"/>
+              <path id="route" d="M110,290 C260,300 280,120 500,130 C700,140 740,300 890,280" fill="none" stroke="#F5C84B" stroke-width="6" stroke-linecap="round"/>
+
+              <!-- stand-in shapes: replace with story illustrations -->
+              <g class="spot" data-i="0" transform="translate(110 322)">
+                <path d="M-30 0 L0 -30 L30 0 V30 H-30Z" fill="#E2761F" stroke="#2A1E16" stroke-width="3"/><rect x="-8" y="6" width="16" height="24" fill="#2A1E16"/>
+              </g>
+              <g class="spot" data-i="1" transform="translate(500 82)">
+                <rect x="-24" y="-24" width="48" height="48" fill="#C5684F" stroke="#2A1E16" stroke-width="3"/><path d="M0 -24 V24 M-24 0 H24" stroke="#F5C84B" stroke-width="5"/>
+              </g>
+              <g class="spot" data-i="2" transform="translate(890 312)">
+                <path d="M-30 0 L0 -30 L30 0 V30 H-30Z" fill="#BFD8C8" stroke="#2A1E16" stroke-width="3"/><rect x="-8" y="6" width="16" height="24" fill="#2A1E16"/>
+              </g>
+              <text class="svg-hand" x="110" y="372" text-anchor="middle">her kitchen</text>
+              <text class="svg-hand" x="500" y="36" text-anchor="middle">wrapped &amp; tagged</text>
+              <text class="svg-hand" x="890" y="372" text-anchor="middle">your door</text>
+
+              <g id="scooter">
+                <rect x="-36" y="-16" width="22" height="18" rx="3" fill="#E2761F" stroke="#2A1E16" stroke-width="2.5"/>
+                <circle cx="-20" cy="14" r="9" fill="#2A1E16"/><circle cx="22" cy="14" r="9" fill="#2A1E16"/>
+                <path d="M-24 6 H4 L12 -12 H20 L16 6 H26" fill="none" stroke="#F7EBD7" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="2" cy="-20" r="8" fill="#F6C79B" stroke="#2A1E16" stroke-width="2.5"/>
+              </g>
+            </svg>
+          </div>
+
+          <div class="stops">
+            <div class="stop" data-i="0"><p class="hand">at her stove</p><h3>Made when you order</h3><p>Meena starts your loaf after you pay, not before. You'll see a ready-by date up front.</p></div>
+            <div class="stop" data-i="1"><p class="hand">at the counter</p><h3>Wrapped, tagged, signed</h3><p>Every parcel gets a handwritten tag. Your order moves from Confirmed to Ready as she goes.</p></div>
+            <div class="stop" data-i="2"><p class="hand">at your door</p><h3>Pick up or delivered</h3><p>Collect from her lane, or have it brought over. Then tell the next neighbour how it was.</p></div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- 7. NOTES: sample copy, replace with real reviews -->
+    <section class="notes" data-theme="sand">
+      <div class="wrap">
+        <h2>Overheard on the lane</h2>
+        <div class="notes__wall">
+          <figure class="note"><blockquote>“Ordered at 4, picked up at 6. Still warm. I'm never buying bread from a packet again.”</blockquote><cite>Riya, Versova</cite></figure>
+          <figure class="note"><blockquote>“I sell thirty cups a week now. My neighbours found me before my relatives did.”</blockquote><cite>Sunita, potter in Bandra</cite></figure>
+          <figure class="note"><blockquote>“Got a date, not a guess.”</blockquote><cite>Imran, Kurla</cite></figure>
+          <figure class="note"><blockquote>“The pickle jar came with a handwritten label. Small thing. Big smile.”</blockquote><cite>Dev, Dadar</cite></figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. SELLER CTA: a visiting card, not a banner -->
+    <section class="cta" data-theme="cream">
+      <div class="wrap cta__grid">
+        <div>
+          <p class="hand" style="color:var(--terracotta)">for the ones who make things</p>
+          <h2>Make something at home? <span class="hl">Pin a tag.</span></h2>
+          <p>List your first product in ten minutes. No shop to build, and nothing to pay until you sell.</p>
+          <a class="btn btn--ink" href="#">Pin your first tag →</a>
+        </div>
+        <aside class="visit" aria-label="Example seller card">
+          <span class="sticker sticker--red" style="--r:8deg">you, soon</span>
+          <h3>Meena's Kitchen</h3>
+          <p class="hand">baking since 5am</p>
+          <dl><dt>Andheri West · </dt><dd>baker</dd><br><dt>★ 4.8 · </dt><dd>112 orders</dd></dl>
+        </aside>
+      </div>
+    </section>
+  </main>
+</div>
+
+<footer data-chrome="footer"></footer>
+
+</body>
+</html>
