@@ -1,0 +1,35 @@
+:root {
+  /* palette: 60 cream/sand, 30 orange/terracotta, 10 teal/ink */
+  --cream: #F7EBD7;
+  --sand: #EFD9B8;
+  --paper: #FFF8E8;
+  --orange: #E2761F;
+  --terracotta: #C5684F;
+  --teal: #1F5C4E;
+  --ink: #2A1E16;
+  --butter: #F5C84B;
+  --chilli: #C93D26;
+  --sage: #BFD8C8;
+  --peach: #F6C79B;
+
+  /* type */
+  --font-display: var(--f-display), "Rubik", system-ui, sans-serif;
+  --font-body: var(--f-body), system-ui, sans-serif;
+  --font-hand: var(--f-hand), cursive;
+  --font-mono: var(--f-mono), ui-monospace, monospace;
+
+  /* shape */
+  --radius: 18px;
+  --radius-lg: 28px;
+  --shadow: 6px 6px 0 var(--ink);
+  --shadow-sm: 4px 4px 0 var(--ink);
+
+  /* layout */
+  --wrap: min(1180px, calc(100% - 40px));
+  --header-h: 66px;
+
+  /* motion */
+  --dur-fast: 0.15s;
+  --dur-base: 0.25s;
+  --dur-slow: 0.7s;
+}
