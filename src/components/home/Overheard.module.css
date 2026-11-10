@@ -1,0 +1,95 @@
+.notes {
+  padding: 6rem 0;
+  background: var(--sand);
+}
+
+.notes h2 {
+  max-width: 12em;
+  margin-bottom: 3rem;
+}
+
+.wall {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 2rem 1.6rem;
+  align-items: start;
+}
+
+.note {
+  position: relative;
+  padding: 1.5rem 1.5rem 1.2rem;
+  background: var(--n, var(--butter));
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  box-shadow: var(--shadow-sm);
+  rotate: var(--r, 0deg);
+  transition:
+    rotate var(--dur-base),
+    translate var(--dur-base);
+}
+
+.note:hover {
+  rotate: 0deg;
+  translate: 0 -6px;
+}
+
+.note::before {
+  content: "";
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  width: 84px;
+  height: 26px;
+  margin-left: -42px;
+  background: rgba(255, 248, 232, 0.65);
+  border: 1.5px solid rgba(42, 30, 22, 0.28);
+  rotate: -3deg;
+}
+
+.note blockquote {
+  font: 700 1.5rem/1.2 var(--font-hand);
+}
+
+.note cite {
+  display: block;
+  margin-top: 0.8rem;
+  font: 700 0.85rem var(--font-body);
+  font-style: normal;
+  opacity: 0.75;
+}
+
+.wall .note:nth-child(1) {
+  grid-column: 1 / span 5;
+  --r: -2deg;
+  --n: var(--butter);
+}
+
+.wall .note:nth-child(2) {
+  grid-column: 6 / span 4;
+  --r: 1.6deg;
+  --n: var(--paper);
+  margin-top: 2.5rem;
+}
+
+.wall .note:nth-child(3) {
+  grid-column: 10 / span 3;
+  --r: -1.4deg;
+  --n: var(--sage);
+}
+
+.wall .note:nth-child(4) {
+  grid-column: 3 / span 5;
+  --r: 1.2deg;
+  --n: var(--peach);
+  margin-top: -0.5rem;
+}
+
+@media (max-width: 900px) {
+  .wall {
+    grid-template-columns: 1fr;
+  }
+  .wall .note {
+    grid-column: 1 !important;
+    margin-top: 0 !important;
+  }
+}
