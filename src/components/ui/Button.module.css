@@ -1,0 +1,38 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font: 700 1rem var(--font-body);
+  padding: 0.85rem 1.5rem;
+  border: 2.5px solid var(--ink);
+  border-radius: 999px;
+  background: var(--butter);
+  color: var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+  cursor: pointer;
+  transition:
+    transform var(--dur-fast),
+    box-shadow var(--dur-fast);
+}
+.btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--ink);
+}
+.btn:active {
+  transform: translate(3px, 3px);
+  box-shadow: 1px 1px 0 var(--ink);
+}
+.ink {
+  background: var(--ink);
+  color: var(--cream);
+  box-shadow: 4px 4px 0 var(--butter);
+}
+.ink:hover {
+  box-shadow: 6px 6px 0 var(--butter);
+}
+.ink:active {
+  box-shadow: 1px 1px 0 var(--butter);
+}
+.paper {
+  background: var(--paper);
+}

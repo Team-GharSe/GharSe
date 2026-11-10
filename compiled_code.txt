@@ -1,0 +1,1745 @@
+=== src/styles/tokens.css ===
+:root {
+  /* palette: 60 cream/sand, 30 orange/terracotta, 10 teal/ink */
+  --cream: #f7ebd7;
+  --sand: #efd9b8;
+  --paper: #fff8e8;
+  --orange: #e2761f;
+  --terracotta: #c5684f;
+  --teal: #1f5c4e;
+  --ink: #2a1e16;
+  --butter: #f5c84b;
+  --chilli: #c93d26;
+  --sage: #bfd8c8;
+  --peach: #f6c79b;
+
+  /* type */
+  --font-display: var(--f-display), "Rubik", system-ui, sans-serif;
+  --font-body: var(--f-body), system-ui, sans-serif;
+  --font-hand: var(--f-hand), cursive;
+  --font-mono: var(--f-mono), ui-monospace, monospace;
+
+  /* shape */
+  --radius: 18px;
+  --radius-lg: 28px;
+  --shadow: 6px 6px 0 var(--ink);
+  --shadow-sm: 4px 4px 0 var(--ink);
+
+  /* layout */
+  --wrap: min(1180px, calc(100% - 40px));
+  --header-h: 66px;
+
+  /* motion */
+  --dur-fast: 0.15s;
+  --dur-base: 0.25s;
+  --dur-slow: 0.7s;
+}
+-e 
+
+=== src/styles/globals.css ===
+@import "./tokens.css";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--cream);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* paper grain over everything, no image file needed */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 100;
+  opacity: 0.09;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+img,
+svg {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 1.04;
+}
+
+h1 {
+  font-size: clamp(2.6rem, 6.6vw, 5.4rem);
+}
+
+h2 {
+  font-size: clamp(2rem, 4.4vw, 3.6rem);
+}
+
+h3 {
+  font-size: 1.35rem;
+}
+
+:focus-visible {
+  outline: 3px solid var(--orange);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+.wrap {
+  width: var(--wrap);
+  margin-inline: auto;
+}
+
+.hand {
+  font-family: var(--font-hand);
+  font-weight: 700;
+  font-size: 1.7rem;
+  line-height: 1;
+}
+
+.hl {
+  display: inline-block;
+  background: var(--butter);
+  color: var(--ink);
+  padding: 0 0.2em;
+  border-radius: 10px;
+  rotate: -2deg;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+-e 
+
+=== src/lib/css.ts ===
+import type { CSSProperties } from "react";
+
+/** Inline style that also allows CSS custom properties like '--r'. */
+export type CSSVars = CSSProperties & Record<`--${string}`, string | number>;
+-e 
+
+=== src/lib/cx.ts ===
+export const cx = (...parts: (string | false | null | undefined)[]) =>
+  parts.filter(Boolean).join(" ");
+-e 
+
+=== src/lib/motion/gsap.ts ===
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+
+gsap.registerPlugin(ScrollTrigger, useGSAP);
+
+export const prefersReducedMotion = () =>
+  typeof window !== "undefined" &&
+  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+// Import GSAP only from here, and only in client components.
+export { gsap, ScrollTrigger, useGSAP };
+-e 
+
+=== src/lib/format.ts ===
+const inr = new Intl.NumberFormat("en-IN", {
+  style: "currency",
+  currency: "INR",
+  maximumFractionDigits: 0,
+});
+
+export const formatINR = (amount: number) => inr.format(amount);
+-e 
+
+=== src/components/home/Shelf.module.css ===
+.shelf {
+  padding: 3rem 0 6rem;
+  background: var(--sand);
+  overflow-x: clip;
+}
+.intro {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+.intro h2 {
+  max-width: 14em;
+}
+.hint {
+  color: var(--terracotta);
+  rotate: -3deg;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2.4rem 2rem;
+  align-items: flex-end;
+  padding: 3.2rem 0 1.3rem;
+  border-bottom: 10px solid var(--ink);
+}
+.rowEnd {
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+}
+
+.thing {
+  display: grid;
+  justify-items: center;
+  gap: 0.9rem;
+  rotate: var(--r, 0deg);
+  translate: 0 var(--y, 0px);
+  transition:
+    rotate var(--dur-base),
+    translate var(--dur-base),
+    scale var(--dur-base);
+}
+.thing:hover {
+  rotate: 0deg;
+  translate: 0 -14px;
+  scale: 1.07;
+}
+.shape {
+  position: relative;
+  width: var(--w, 120px);
+  height: var(--h, 120px);
+  background: var(--c, var(--orange));
+  border: 3px solid var(--ink);
+  border-radius: var(--br, 50%);
+  box-shadow: 5px 5px 0 var(--ink);
+}
+.label {
+  font: 700 1.5rem var(--font-hand);
+  line-height: 1.1;
+  padding: 0 0.7rem;
+  background: var(--paper);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  rotate: 2deg;
+}
+
+.jar::before {
+  content: "";
+  position: absolute;
+  top: -16px;
+  left: 14%;
+  right: 14%;
+  height: 16px;
+  background: var(--ink);
+  border-radius: 6px 6px 0 0;
+}
+.pot::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: -8px;
+  right: -8px;
+  height: 20px;
+  background: inherit;
+  border: 3px solid var(--ink);
+  border-radius: 50%;
+}
+.gift::after {
+  content: "";
+  position: absolute;
+  left: 44%;
+  right: 44%;
+  top: 0;
+  bottom: 0;
+  background: var(--butter);
+  border-inline: 3px solid var(--ink);
+}
+
+@media (max-width: 900px) {
+  .rowEnd {
+    justify-content: flex-start;
+  }
+}
+-e 
+
+=== src/components/home/Hero.tsx ===
+"use client";
+
+import { useRef } from "react";
+import HangTag from "@/components/product/HangTag";
+import Words from "@/components/motion/Words";
+import { Button } from "@/components/ui/Button";
+import Sticker from "@/components/ui/Sticker";
+import { cx } from "@/lib/cx";
+import { gsap, prefersReducedMotion, useGSAP } from "@/lib/motion/gsap";
+import styles from "./Hero.module.css";
+
+export default function Hero() {
+  const root = useRef<HTMLElement>(null);
+
+  useGSAP(
+    () => {
+      const scope = root.current;
+      if (!scope || prefersReducedMotion()) return;
+      const q = gsap.utils.selector(scope);
+
+      // CSS hides these until JS is ready; reveal, then animate from hidden.
+      gsap.set(q(`.${styles.intro}`), { opacity: 1 });
+
+      gsap
+        .timeline({ defaults: { ease: "power4.out" } })
+        .from(q("[data-split]"), {
+          y: 70,
+          opacity: 0,
+          rotation: () => gsap.utils.random(-8, 8),
+          duration: 0.9,
+          stagger: 0.07,
+        })
+        .from(
+          q(`.${styles.eyebrow}, .${styles.sub}, .${styles.finder}`),
+          { autoAlpha: 0, y: 30, duration: 0.8, stagger: 0.12 },
+          "-=0.5",
+        )
+        .from(
+          q(`.${styles.clusterTag}`),
+          {
+            y: -140,
+            opacity: 0,
+            rotation: (i: number) => [-14, 12, -9][i % 3],
+            duration: 1.1,
+            stagger: 0.16,
+            ease: "back.out(1.5)",
+          },
+          "-=1",
+        )
+        .from(
+          q(`.${styles.pop}`),
+          {
+            scale: 0,
+            rotation: -45,
+            duration: 0.6,
+            stagger: 0.12,
+            ease: "back.out(3)",
+          },
+          "-=0.5",
+        );
+
+      gsap.to(q(`.${styles.cluster}`), {
+        yPercent: -12,
+        ease: "none",
+        scrollTrigger: {
+          trigger: scope,
+          start: "top top",
+          end: "bottom top",
+          scrub: true,
+        },
+      });
+    },
+    { scope: root },
+  );
+
+  return (
+    <section ref={root} className={styles.hero}>
+      <div className={`wrap ${styles.grid}`}>
+        <div>
+          <p className={cx("hand", styles.eyebrow, styles.intro)}>
+            mumbai&apos;s home makers, pinned up in one place
+          </p>
+          <h1 className={styles.intro}>
+            <Words text="Somebody" />{" "}
+            <span data-split className={styles.pill} aria-hidden="true" />{" "}
+            <Words text="near you is" />{" "}
+            <span
+              data-split
+              className={cx(styles.pill, styles.pillTeal)}
+              aria-hidden="true"
+            />{" "}
+            <span data-split className="hl">
+              baking
+            </span>{" "}
+            <Words text="right now." />
+          </h1>
+          <p className={cx(styles.sub, styles.intro)}>
+            Bakers, potters and tailors working from their own kitchens, a few
+            lanes away.
+          </p>
+
+          {/* /explore is built later. For now this submits to a 404. */}
+          <form className={cx(styles.finder, styles.intro)} action="/explore">
+            <span>I&apos;m after</span>
+            <select
+              aria-label="What are you after"
+              name="c"
+              defaultValue="bread"
+            >
+              <option>bread</option>
+              <option>pottery</option>
+              <option>a kurta</option>
+              <option>pickles</option>
+              <option>gifts</option>
+            </select>
+            <span>near</span>
+            <input
+              aria-label="Your area"
+              name="area"
+              defaultValue="Andheri"
+              autoComplete="off"
+            />
+            <Button type="submit">Go →</Button>
+          </form>
+        </div>
+
+        <div className={styles.cluster}>
+          <HangTag
+            mini
+            name="Sourdough"
+            note="baked at 5am"
+            price={180}
+            category="bakes"
+            tilt="-5deg"
+            floatDelay="0s"
+            className={cx(styles.clusterTag, styles.intro)}
+            style={{ left: 0, top: 30 }}
+          />
+          <HangTag
+            mini
+            name="Chai cups"
+            note="no two alike"
+            price={650}
+            category="pottery"
+            tilt="4deg"
+            floatDelay="-2s"
+            className={cx(styles.clusterTag, styles.intro)}
+            style={{ right: 0, top: 120 }}
+          />
+          <HangTag
+            mini
+            name="Block-print kurta"
+            note="made to order"
+            price={1450}
+            category="tailoring"
+            tilt="-2deg"
+            floatDelay="-4s"
+            className={cx(styles.clusterTag, styles.intro)}
+            style={{ left: 60, bottom: 0 }}
+          />
+          <Sticker
+            hand
+            live
+            rotate="5deg"
+            className={cx(styles.intro, styles.pop)}
+            style={{ right: "6%", top: 0 }}
+          >
+            baking now · 0.8 km
+          </Sticker>
+          <Sticker
+            variant="red"
+            rotate="-8deg"
+            className={cx(styles.intro, styles.pop)}
+            style={{ left: "2%", bottom: "36%" }}
+          >
+            Verified
+          </Sticker>
+        </div>
+      </div>
+    </section>
+  );
+}
+-e 
+
+=== src/components/home/Marquee.tsx ===
+"use client";
+
+import { useRef } from "react";
+import {
+  gsap,
+  prefersReducedMotion,
+  ScrollTrigger,
+  useGSAP,
+} from "@/lib/motion/gsap";
+import styles from "./Marquee.module.css";
+
+const ITEMS = [
+  "Bakers",
+  "Potters",
+  "Tailors",
+  "Pickle makers",
+  "Jewellers",
+  "Crafters",
+];
+
+export default function Marquee() {
+  const track = useRef<HTMLDivElement>(null);
+
+  // The strip scrolls by CSS. Scrolling the page speeds it up and flips its direction.
+  useGSAP(
+    () => {
+      if (prefersReducedMotion() || !track.current) return;
+      const anim = track.current.getAnimations()[0];
+      if (!anim) return;
+
+      anim.currentTime = 100000; // keeps reverse playback inside an iteration
+      const proxy = { rate: 1 };
+      const apply = () => {
+        anim.playbackRate = proxy.rate;
+      };
+
+      ScrollTrigger.create({
+        onUpdate: (self) => {
+          const boost = 1 + Math.min(Math.abs(self.getVelocity()) / 300, 5);
+          gsap.to(proxy, {
+            rate: self.direction * boost,
+            duration: 0.3,
+            overwrite: true,
+            onUpdate: apply,
+            onComplete: () => {
+              gsap.to(proxy, {
+                rate: self.direction,
+                duration: 1.2,
+                onUpdate: apply,
+              });
+            },
+          });
+        },
+      });
+    },
+    { scope: track },
+  );
+
+  return (
+    <div className={styles.marquee} aria-hidden="true">
+      <div ref={track} className={styles.track}>
+        {[...ITEMS, ...ITEMS].map((item, i) => (
+          <span key={i}>{item}</span>
+        ))}
+      </div>
+    </div>
+  );
+}
+-e 
+
+=== src/components/home/Shelf.tsx ===
+"use client";
+
+import Link from "next/link";
+import { useRef } from "react";
+import { cx } from "@/lib/cx";
+import type { CSSVars } from "@/lib/css";
+import { gsap, prefersReducedMotion, useGSAP } from "@/lib/motion/gsap";
+import styles from "./Shelf.module.css";
+
+type ShelfItem = {
+  label: string;
+  href: string;
+  shape?: "jar" | "pot" | "gift";
+  vars: CSSVars;
+};
+
+// Placeholder shapes stand in for the illustrations. Category links map to real ids later.
+const TOP: ShelfItem[] = [
+  {
+    label: "bakes",
+    href: "/explore?category=bakes",
+    vars: {
+      "--r": "-3deg",
+      "--w": "150px",
+      "--h": "150px",
+      "--c": "var(--orange)",
+    },
+  },
+  {
+    label: "pottery",
+    href: "/explore?category=pottery",
+    shape: "pot",
+    vars: {
+      "--r": "2deg",
+      "--w": "130px",
+      "--h": "150px",
+      "--c": "var(--terracotta)",
+      "--br": "50% 50% 24px 24px / 44% 44% 24px 24px",
+      "--y": "4px",
+    },
+  },
+  {
+    label: "tailoring",
+    href: "/explore?category=tailoring",
+    vars: {
+      "--r": "-1.5deg",
+      "--w": "100px",
+      "--h": "150px",
+      "--c": "var(--teal)",
+      "--br": "14px",
+    },
+  },
+  {
+    label: "pickles",
+    href: "/explore?category=pickles",
+    shape: "jar",
+    vars: {
+      "--r": "3deg",
+      "--w": "110px",
+      "--h": "130px",
+      "--c": "var(--butter)",
+      "--br": "16px",
+    },
+  },
+];
+
+const BOTTOM: ShelfItem[] = [
+  {
+    label: "spices",
+    href: "/explore?category=spices",
+    vars: {
+      "--r": "2deg",
+      "--w": "140px",
+      "--h": "110px",
+      "--c": "var(--sage)",
+      "--br": "140px 140px 18px 18px / 110px 110px 18px 18px",
+    },
+  },
+  {
+    label: "gifts",
+    href: "/explore?category=gifts",
+    shape: "gift",
+    vars: {
+      "--r": "-2deg",
+      "--w": "120px",
+      "--h": "120px",
+      "--c": "var(--peach)",
+      "--br": "12px",
+    },
+  },
+  {
+    label: "crafts",
+    href: "/explore?category=crafts",
+    vars: {
+      "--r": "3deg",
+      "--w": "90px",
+      "--h": "150px",
+      "--c": "var(--chilli)",
+      "--br": "45px",
+    },
+  },
+];
+
+function renderItem(item: ShelfItem) {
+  return (
+    <Link
+      key={item.label}
+      href={item.href}
+      className={styles.thing}
+      style={item.vars}
+    >
+      <span className={cx(styles.shape, item.shape && styles[item.shape])} />
+      <span className={styles.label}>{item.label}</span>
+    </Link>
+  );
+}
+
+export default function Shelf() {
+  const topRow = useRef<HTMLDivElement>(null);
+  const bottomRow = useRef<HTMLDivElement>(null);
+
+  useGSAP(() => {
+    if (prefersReducedMotion()) return;
+
+    // dir 1: items start off-screen right and slide left. dir -1: start off-screen left and slide right.
+    const slideIn = (row: HTMLElement | null, dir: 1 | -1) => {
+      if (!row) return;
+      const items = gsap.utils.toArray<HTMLElement>(`.${styles.thing}`, row);
+      gsap.from(items, {
+        x: () => dir * window.innerWidth,
+        duration: 1.3,
+        ease: "power3.out",
+        // the item that travels furthest leads, so the row arrives like a train
+        stagger: { each: 0.14, from: dir === 1 ? "start" : "end" },
+        scrollTrigger: { trigger: row, start: "top 80%", once: true },
+      });
+    };
+
+    slideIn(topRow.current, 1);
+    slideIn(bottomRow.current, -1);
+  });
+
+  return (
+    <section className={styles.shelf}>
+      <div className="wrap">
+        <div className={styles.intro}>
+          <h2>Start with what you need</h2>
+          <span className={cx("hand", styles.hint)}>
+            (tap anything on the shelf)
+          </span>
+        </div>
+        <div ref={topRow} className={styles.row}>
+          {TOP.map(renderItem)}
+        </div>
+        <div ref={bottomRow} className={cx(styles.row, styles.rowEnd)}>
+          {BOTTOM.map(renderItem)}
+        </div>
+      </div>
+    </section>
+  );
+}
+-e 
+
+=== src/components/home/Hero.module.css ===
+.hero {
+  position: relative;
+  isolation: isolate;
+  background: var(--orange);
+  padding: clamp(2.5rem, 6vw, 5rem) 0 8rem;
+  overflow: hidden;
+}
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0 -140px;
+  z-index: -1;
+  background: repeating-linear-gradient(
+    135deg,
+    transparent 0 46px,
+    rgba(150, 60, 10, 0.16) 46px 92px
+  );
+  animation: stripes 24s linear infinite;
+}
+@keyframes stripes {
+  to {
+    transform: translateX(130.1px);
+  }
+}
+.hero::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 30px;
+  background: radial-gradient(
+      circle at 15px 30px,
+      var(--cream) 15px,
+      transparent 16px
+    )
+    repeat-x;
+  background-size: 30px 30px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 2rem;
+  align-items: center;
+  position: relative;
+}
+.eyebrow {
+  color: var(--cream);
+}
+.hero h1 {
+  color: var(--cream);
+  text-shadow: 4px 4px 0 var(--ink);
+}
+.sub {
+  margin-top: 1.4rem;
+  color: var(--ink);
+  max-width: 30ch;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.pill {
+  display: inline-block;
+  width: 1.5em;
+  height: 0.68em;
+  vertical-align: 0.08em;
+  margin-inline: 0.08em;
+  border: 3px solid var(--ink);
+  border-radius: 999px;
+  background: repeating-linear-gradient(
+    45deg,
+    var(--butter) 0 8px,
+    #edb52e 8px 16px
+  );
+}
+.pillTeal {
+  background: repeating-linear-gradient(
+    45deg,
+    var(--teal) 0 8px,
+    #2b7160 8px 16px
+  );
+}
+
+/* sentence builder instead of a search bar */
+.finder {
+  margin-top: 2rem;
+  max-width: 640px;
+  padding: 1rem 1.3rem;
+  rotate: -1deg;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.8rem;
+  background: var(--paper);
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  font: 400 clamp(1.1rem, 2.2vw, 1.5rem) var(--font-display);
+}
+.finder select,
+.finder input {
+  font: inherit;
+  color: var(--terracotta);
+  background: transparent;
+  border: 0;
+  border-bottom: 3px dashed var(--ink);
+  padding: 0.1rem 0.3rem;
+  outline: none;
+  width: auto;
+  max-width: 11ch;
+  cursor: pointer;
+}
+.finder input {
+  width: 9ch;
+  cursor: text;
+}
+.finder select:focus,
+.finder input:focus {
+  border-bottom-style: solid;
+  border-bottom-color: var(--orange);
+}
+
+.cluster {
+  position: relative;
+  min-height: 440px;
+}
+.cluster .clusterTag {
+  position: absolute;
+  width: 210px;
+  animation: bob 7s ease-in-out infinite;
+  animation-delay: var(--d, 0s);
+}
+@keyframes bob {
+  50% {
+    translate: 0 -14px;
+  }
+}
+.pop {
+  z-index: 5;
+}
+
+/* Hidden until Hero.tsx reveals them. Only when scripting is on and motion is allowed. */
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  .intro {
+    opacity: 0;
+  }
+}
+
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  .cluster {
+    min-height: 360px;
+  }
+}
+-e 
+
+=== src/components/home/Marquee.module.css ===
+.marquee {
+  position: relative;
+  z-index: 5;
+  margin-top: -2.4rem;
+  rotate: -1.6deg;
+  padding: 0.75rem 0;
+  overflow: hidden;
+  background: var(--ink);
+  color: var(--cream);
+  border-block: 3px solid var(--butter);
+}
+.track {
+  display: flex;
+  gap: 2.5rem;
+  width: max-content;
+  white-space: nowrap;
+  font: 400 1.4rem var(--font-display);
+  animation: slide 30s linear infinite;
+}
+.track span::after {
+  content: "✺";
+  color: var(--orange);
+  margin-left: 2.5rem;
+}
+@keyframes slide {
+  to {
+    transform: translateX(-50%);
+  }
+}
+-e 
+
+=== src/components/ui/Sticker.module.css ===
+.sticker {
+  position: absolute;
+  z-index: 3;
+  display: inline-block;
+  padding: 0.3rem 0.85rem;
+  border: 2.5px solid var(--ink);
+  border-radius: 999px;
+  background: var(--butter);
+  color: var(--ink);
+  font: 700 0.82rem var(--font-body);
+  box-shadow: 3px 3px 0 var(--ink);
+  rotate: var(--r, -6deg);
+  white-space: nowrap;
+}
+.red {
+  background: var(--chilli);
+  color: var(--cream);
+}
+.teal {
+  background: var(--teal);
+  color: var(--cream);
+}
+.hand {
+  font: 700 1.25rem var(--font-hand);
+  padding: 0.1rem 0.9rem;
+}
+.live::before {
+  content: "";
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: 0.5rem;
+  border-radius: 50%;
+  background: var(--chilli);
+  animation: pulse 1.6s ease-in-out infinite;
+}
+@keyframes pulse {
+  50% {
+    scale: 1.6;
+    opacity: 0.45;
+  }
+}
+-e 
+
+=== src/components/ui/Button.tsx ===
+import Link from "next/link";
+import type { ButtonHTMLAttributes, ReactNode } from "react";
+import { cx } from "@/lib/cx";
+import styles from "./Button.module.css";
+
+type Variant = "butter" | "ink" | "paper";
+type Common = { variant?: Variant; className?: string; children: ReactNode };
+
+export function Button({
+  variant = "butter",
+  className,
+  children,
+  ...rest
+}: Common & ButtonHTMLAttributes<HTMLButtonElement>) {
+  return (
+    <button className={cx(styles.btn, styles[variant], className)} {...rest}>
+      {children}
+    </button>
+  );
+}
+
+export function ButtonLink({
+  variant = "butter",
+  className,
+  children,
+  href,
+}: Common & { href: string }) {
+  return (
+    <Link href={href} className={cx(styles.btn, styles[variant], className)}>
+      {children}
+    </Link>
+  );
+}
+-e 
+
+=== src/components/ui/Sticker.tsx ===
+import type { ReactNode } from "react";
+import { cx } from "@/lib/cx";
+import type { CSSVars } from "@/lib/css";
+import styles from "./Sticker.module.css";
+
+type Props = {
+  variant?: "butter" | "red" | "teal";
+  hand?: boolean;
+  live?: boolean;
+  rotate?: string;
+  className?: string;
+  style?: CSSVars;
+  children: ReactNode;
+};
+
+export default function Sticker({
+  variant = "butter",
+  hand = false,
+  live = false,
+  rotate = "-6deg",
+  className,
+  style,
+  children,
+}: Props) {
+  const vars: CSSVars = { "--r": rotate, ...style };
+  return (
+    <span
+      className={cx(
+        styles.sticker,
+        styles[variant],
+        hand && styles.hand,
+        live && styles.live,
+        className,
+      )}
+      style={vars}
+    >
+      {children}
+    </span>
+  );
+}
+-e 
+
+=== src/components/ui/Button.module.css ===
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font: 700 1rem var(--font-body);
+  padding: 0.85rem 1.5rem;
+  border: 2.5px solid var(--ink);
+  border-radius: 999px;
+  background: var(--butter);
+  color: var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+  cursor: pointer;
+  transition:
+    transform var(--dur-fast),
+    box-shadow var(--dur-fast);
+}
+.btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--ink);
+}
+.btn:active {
+  transform: translate(3px, 3px);
+  box-shadow: 1px 1px 0 var(--ink);
+}
+.ink {
+  background: var(--ink);
+  color: var(--cream);
+  box-shadow: 4px 4px 0 var(--butter);
+}
+.ink:hover {
+  box-shadow: 6px 6px 0 var(--butter);
+}
+.ink:active {
+  box-shadow: 1px 1px 0 var(--butter);
+}
+.paper {
+  background: var(--paper);
+}
+-e 
+
+=== src/components/layout/Header.tsx ===
+import Link from "next/link";
+import styles from "./Header.module.css";
+
+const NAV = [
+  { href: "/", label: "Home" },
+  { href: "/explore", label: "Explore" },
+  { href: "/makers", label: "Makers" },
+  { href: "/sell", label: "Sell with us" },
+];
+
+export default function Header() {
+  return (
+    <header className={styles.header}>
+      <div className={`wrap ${styles.inner}`}>
+        <Link href="/" className={styles.brand}>
+          <i aria-hidden="true" className={styles.mark} />
+          GharSe
+        </Link>
+        <nav className={styles.nav} aria-label="Main">
+          {NAV.map((item) => (
+            <Link key={item.href} href={item.href} className={styles.link}>
+              {item.label}
+            </Link>
+          ))}
+          {/* basket count is wired to the cart feature later */}
+          <Link href="/basket" className={`${styles.link} ${styles.basket}`}>
+            Basket <span className={styles.count}>0</span>
+          </Link>
+        </nav>
+      </div>
+    </header>
+  );
+}
+-e 
+
+=== src/components/layout/Header.module.css ===
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  color: var(--ink);
+  background: rgba(247, 235, 215, 0.94);
+  backdrop-filter: blur(8px);
+  border-bottom: 3px solid var(--ink);
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: var(--header-h);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-display);
+  font-size: 1.7rem;
+}
+
+.mark {
+  width: 28px;
+  height: 28px;
+  border-radius: 50% 50% 50% 7px;
+  background: var(--orange);
+  border: 2.5px solid var(--ink);
+  rotate: -12deg;
+  transition: rotate 0.3s;
+}
+
+.brand:hover .mark {
+  rotate: 20deg;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.link {
+  font-weight: 700;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  transition: background var(--dur-fast);
+}
+
+.link:hover {
+  background: var(--sand);
+}
+
+.basket {
+  background: var(--ink);
+  color: var(--cream);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.basket:hover {
+  background: var(--ink);
+}
+
+.count {
+  background: var(--chilli);
+  border-radius: 999px;
+  padding: 0 0.5rem;
+  font-size: 0.8rem;
+  min-width: 1.5rem;
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .link:not(.basket) {
+    display: none;
+  }
+}
+-e 
+
+=== src/components/layout/Footer.tsx ===
+import Link from "next/link";
+import styles from "./Footer.module.css";
+
+export default function Footer() {
+  return (
+    <footer className={styles.footer}>
+      <div className="wrap">
+        <div className={styles.grid}>
+          <div>
+            <Link href="/" className={styles.brand}>
+              <i aria-hidden="true" className={styles.mark} />
+              GharSe
+            </Link>
+            <p className={styles.tagline}>
+              A noticeboard for Mumbai&apos;s home makers. Pinned up one lane at
+              a time.
+            </p>
+          </div>
+          <div>
+            <h4 className={styles.heading}>Shop</h4>
+            <ul>
+              <li>
+                <Link href="/explore">Explore</Link>
+              </li>
+              <li>
+                <Link href="/makers">Makers</Link>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h4 className={styles.heading}>Sell</h4>
+            <ul>
+              <li>
+                <Link href="/sell">Pin a tag</Link>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h4 className={styles.heading}>Help</h4>
+            <ul>
+              <li>
+                <Link href="/support">Support</Link>
+              </li>
+              <li>
+                <Link href="/orders">Orders</Link>
+              </li>
+              <li>
+                <Link href="/about">About</Link>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div className={styles.word} aria-hidden="true">
+          GharSe
+        </div>
+        <p className={styles.legal}>© 2026 GharSe. Made with care in Mumbai.</p>
+      </div>
+    </footer>
+  );
+}
+-e 
+
+=== src/components/layout/Footer.module.css ===
+.footer {
+  background: var(--ink);
+  color: var(--cream);
+  padding: 4rem 0 1.5rem;
+  overflow: hidden;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 2rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-display);
+  font-size: 1.7rem;
+}
+
+.mark {
+  width: 28px;
+  height: 28px;
+  border-radius: 50% 50% 50% 7px;
+  background: var(--orange);
+  border: 2.5px solid var(--cream);
+  rotate: -12deg;
+}
+
+.tagline {
+  margin-top: 1rem;
+  max-width: 30ch;
+  opacity: 0.85;
+}
+
+.heading {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--butter);
+  margin-bottom: 0.7rem;
+}
+
+.footer li {
+  margin-bottom: 0.35rem;
+  opacity: 0.85;
+}
+
+.word {
+  font-family: var(--font-display);
+  font-size: clamp(5rem, 21vw, 17rem);
+  line-height: 0.85;
+  color: transparent;
+  -webkit-text-stroke: 2px var(--orange);
+  margin-top: 2.5rem;
+  white-space: nowrap;
+}
+
+.legal {
+  margin-top: 1rem;
+  font-size: 0.88rem;
+  opacity: 0.65;
+}
+
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+-e 
+
+=== src/components/product/HangTag.module.css ===
+.tag {
+  position: relative;
+  display: block;
+  background: var(--paper);
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  border-radius: 22px;
+  box-shadow: var(--shadow-sm);
+  rotate: var(--r, 0deg);
+  translate: 0 var(--y, 0px);
+  transform-origin: 50% 0;
+  transition:
+    rotate var(--dur-base),
+    translate var(--dur-base),
+    box-shadow var(--dur-base);
+}
+.tag:hover {
+  rotate: 0deg;
+  translate: 0 -8px;
+  box-shadow: 9px 9px 0 var(--ink);
+}
+.mini {
+  --h: 110px;
+}
+.pin {
+  position: absolute;
+  z-index: 4;
+  top: -12px;
+  left: 50%;
+  width: 22px;
+  height: 22px;
+  margin-left: -11px;
+  border-radius: 50%;
+  background: var(--chilli);
+  border: 2.5px solid var(--ink);
+  box-shadow: 2px 3px 0 rgba(42, 30, 22, 0.45);
+}
+.pin::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 4px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.7);
+}
+.media {
+  height: var(--h, 190px);
+  display: grid;
+  place-items: center;
+  border-bottom: 3px dashed var(--ink);
+  border-radius: 19px 19px 0 0;
+  font: 700 1.3rem var(--font-hand);
+  color: rgba(42, 30, 22, 0.5);
+  background: repeating-linear-gradient(
+    45deg,
+    #f2b77a 0 14px,
+    #eba566 14px 28px
+  );
+}
+.tag[data-cat="pottery"] .media {
+  background: radial-gradient(circle at 30% 30%, #e9a08a, var(--terracotta));
+}
+.tag[data-cat="tailoring"] .media {
+  background: repeating-linear-gradient(
+    -45deg,
+    #8fb7a6 0 14px,
+    #7ba595 14px 28px
+  );
+}
+.tag[data-cat="pickles"] .media {
+  background: radial-gradient(circle at 70% 30%, #f8dd8a, var(--butter));
+}
+.tag[data-cat="crafts"] .media {
+  background: repeating-linear-gradient(
+    90deg,
+    var(--peach) 0 12px,
+    #f0b887 12px 24px
+  );
+}
+.stamp {
+  position: absolute;
+  z-index: 3;
+  right: -12px;
+  top: calc(var(--h, 190px) - 34px);
+  display: grid;
+  place-items: center;
+  width: 66px;
+  height: 66px;
+  border-radius: 50%;
+  background: var(--paper);
+  border: 3px dashed var(--chilli);
+  color: var(--chilli);
+  rotate: -9deg;
+  font: 400 1.15rem var(--font-display);
+}
+.mini .stamp {
+  width: 56px;
+  height: 56px;
+  font-size: 1rem;
+}
+.body {
+  padding: 1rem 1.2rem 1.2rem;
+}
+.body h3 {
+  font-size: 1.25rem;
+  padding-right: 2.5rem;
+}
+.note {
+  margin: 0.5rem 0;
+  font: 700 1.25rem/1.15 var(--font-hand);
+  color: var(--terracotta);
+}
+-e 
+
+=== src/components/product/HangTag.tsx ===
+import { cx } from "@/lib/cx";
+import type { CSSVars } from "@/lib/css";
+import { formatINR } from "@/lib/format";
+import styles from "./HangTag.module.css";
+
+export type TagCategory =
+  "bakes" | "pottery" | "tailoring" | "pickles" | "crafts";
+
+type Props = {
+  name: string;
+  note?: string;
+  price: number;
+  category?: TagCategory;
+  mini?: boolean;
+  tilt?: string;
+  floatDelay?: string;
+  className?: string;
+  style?: CSSVars;
+};
+
+// Kept minimal on purpose. Maker, distance and add-to-basket arrive with the noticeboard.
+export default function HangTag({
+  name,
+  note,
+  price,
+  category,
+  mini = false,
+  tilt = "0deg",
+  floatDelay,
+  className,
+  style,
+}: Props) {
+  const vars: CSSVars = {
+    "--r": tilt,
+    ...(floatDelay ? { "--d": floatDelay } : {}),
+    ...style,
+  };
+  return (
+    <article
+      className={cx(styles.tag, mini && styles.mini, className)}
+      data-cat={category}
+      style={vars}
+    >
+      <i className={styles.pin} aria-hidden="true" />
+      <div className={styles.media}>
+        <span>photo</span>
+      </div>
+      <span className={styles.stamp}>{formatINR(price)}</span>
+      <div className={styles.body}>
+        <h3>{name}</h3>
+        {note && <p className={styles.note}>{note}</p>}
+      </div>
+    </article>
+  );
+}
+-e 
+
+=== src/components/motion/Words.tsx ===
+import { Fragment } from "react";
+import styles from "./Words.module.css";
+
+/** Renders each word in its own span so GSAP can animate words individually. */
+export default function Words({ text }: { text: string }) {
+  return (
+    <>
+      {text.split(" ").map((word, i) => (
+        <Fragment key={i}>
+          {i > 0 && " "}
+          <span data-split className={styles.w}>
+            {word}
+          </span>
+        </Fragment>
+      ))}
+    </>
+  );
+}
+-e 
+
+=== src/components/motion/Words.module.css ===
+.w {
+  display: inline-block;
+}
+-e 
+
+=== src/app/globals.css ===
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+html {
+  height: 100%;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+body {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
+}
+-e 
+
+=== src/app/(public)/page.tsx ===
+import Hero from "@/components/home/Hero";
+import Marquee from "@/components/home/Marquee";
+import Shelf from "@/components/home/Shelf";
+
+export default function HomePage() {
+  return (
+    <>
+      <Hero />
+      <Marquee />
+      <Shelf />
+    </>
+  );
+}
+-e 
+
+=== src/app/layout.tsx ===
+import type { Metadata } from "next";
+import { Bagel_Fat_One, Caveat, DM_Mono, DM_Sans } from "next/font/google";
+import "@/styles/globals.css";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
+
+const display = Bagel_Fat_One({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--f-display",
+  display: "swap",
+});
+const body = DM_Sans({
+  subsets: ["latin"],
+  variable: "--f-body",
+  display: "swap",
+});
+const hand = Caveat({
+  weight: ["700"],
+  subsets: ["latin"],
+  variable: "--f-hand",
+  display: "swap",
+});
+const mono = DM_Mono({
+  weight: ["400", "500"],
+  subsets: ["latin"],
+  variable: "--f-mono",
+  display: "swap",
+});
+
+export const metadata: Metadata = {
+  title: { default: "GharSe", template: "%s · GharSe" },
+  description: "Mumbai's home makers, pinned up in one place.",
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html
+      lang="en"
+      className={`${display.variable} ${body.variable} ${hand.variable} ${mono.variable}`}
+    >
+      <body>
+        <div className="page">
+          <Header />
+          <main>{children}</main>
+        </div>
+        <Footer />
+      </body>
+    </html>
+  );
+}
+-e 
+
+=== package.json ===
+{
+  "name": "gharse-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "@gsap/react": "^2.1.2",
+    "gsap": "^3.15.1",
+    "next": "16.4.5",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.4.5",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.9.10",
+    "typescript": "^5"
+  },
+  "packageManager": "pnpm@12.18.0"
+}
+-e 
+
+=== tsconfig.json ===
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts",
+    "**/*.mts"
+  ],
+  "exclude": ["node_modules"]
+}
+-e 
+
+=== next.config.ts ===
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+  /* config options here */
+  cacheComponents: true,
+  partialPrefetching: true,
+};
+
+export default nextConfig;
+-e 
+

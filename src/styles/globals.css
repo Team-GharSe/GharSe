@@ -91,6 +91,15 @@ h3 {
   line-height: 1;
 }
 
+.hl {
+  display: inline-block;
+  background: var(--butter);
+  color: var(--ink);
+  padding: 0 0.2em;
+  border-radius: 10px;
+  rotate: -2deg;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

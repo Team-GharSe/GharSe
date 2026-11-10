@@ -1,0 +1,42 @@
+.sticker {
+  position: absolute;
+  z-index: 3;
+  display: inline-block;
+  padding: 0.3rem 0.85rem;
+  border: 2.5px solid var(--ink);
+  border-radius: 999px;
+  background: var(--butter);
+  color: var(--ink);
+  font: 700 0.82rem var(--font-body);
+  box-shadow: 3px 3px 0 var(--ink);
+  rotate: var(--r, -6deg);
+  white-space: nowrap;
+}
+.red {
+  background: var(--chilli);
+  color: var(--cream);
+}
+.teal {
+  background: var(--teal);
+  color: var(--cream);
+}
+.hand {
+  font: 700 1.25rem var(--font-hand);
+  padding: 0.1rem 0.9rem;
+}
+.live::before {
+  content: "";
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: 0.5rem;
+  border-radius: 50%;
+  background: var(--chilli);
+  animation: pulse 1.6s ease-in-out infinite;
+}
+@keyframes pulse {
+  50% {
+    scale: 1.6;
+    opacity: 0.45;
+  }
+}

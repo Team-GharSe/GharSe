@@ -1,11 +1,11 @@
-import Link from 'next/link';
-import styles from './Header.module.css';
+import Link from "next/link";
+import styles from "./Header.module.css";
 
 const NAV = [
-  { href: '/', label: 'Home' },
-  { href: '/explore', label: 'Explore' },
-  { href: '/makers', label: 'Makers' },
-  { href: '/sell', label: 'Sell with us' },
+  { href: "/", label: "Home" },
+  { href: "/explore", label: "Explore" },
+  { href: "/makers", label: "Makers" },
+  { href: "/sell", label: "Sell with us" },
 ];
 
 export default function Header() {

@@ -1,0 +1,29 @@
+.marquee {
+  position: relative;
+  z-index: 5;
+  margin-top: -2.4rem;
+  rotate: -1.6deg;
+  padding: 0.75rem 0;
+  overflow: hidden;
+  background: var(--ink);
+  color: var(--cream);
+  border-block: 3px solid var(--butter);
+}
+.track {
+  display: flex;
+  gap: 2.5rem;
+  width: max-content;
+  white-space: nowrap;
+  font: 400 1.4rem var(--font-display);
+  animation: slide 30s linear infinite;
+}
+.track span::after {
+  content: "✺";
+  color: var(--orange);
+  margin-left: 2.5rem;
+}
+@keyframes slide {
+  to {
+    transform: translateX(-50%);
+  }
+}

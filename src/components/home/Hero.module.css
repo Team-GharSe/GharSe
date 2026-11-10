@@ -1,0 +1,158 @@
+.hero {
+  position: relative;
+  isolation: isolate;
+  background: var(--orange);
+  padding: clamp(2.5rem, 6vw, 5rem) 0 8rem;
+  overflow: hidden;
+}
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0 -140px;
+  z-index: -1;
+  background: repeating-linear-gradient(
+    135deg,
+    transparent 0 46px,
+    rgba(150, 60, 10, 0.16) 46px 92px
+  );
+  animation: stripes 24s linear infinite;
+}
+@keyframes stripes {
+  to {
+    transform: translateX(130.1px);
+  }
+}
+.hero::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 30px;
+  background: radial-gradient(
+      circle at 15px 30px,
+      var(--cream) 15px,
+      transparent 16px
+    )
+    repeat-x;
+  background-size: 30px 30px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 2rem;
+  align-items: center;
+  position: relative;
+}
+.eyebrow {
+  color: var(--cream);
+}
+.hero h1 {
+  color: var(--cream);
+  text-shadow: 4px 4px 0 var(--ink);
+}
+.sub {
+  margin-top: 1.4rem;
+  color: var(--ink);
+  max-width: 30ch;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.pill {
+  display: inline-block;
+  width: 1.5em;
+  height: 0.68em;
+  vertical-align: 0.08em;
+  margin-inline: 0.08em;
+  border: 3px solid var(--ink);
+  border-radius: 999px;
+  background: repeating-linear-gradient(
+    45deg,
+    var(--butter) 0 8px,
+    #edb52e 8px 16px
+  );
+}
+.pillTeal {
+  background: repeating-linear-gradient(
+    45deg,
+    var(--teal) 0 8px,
+    #2b7160 8px 16px
+  );
+}
+
+/* sentence builder instead of a search bar */
+.finder {
+  margin-top: 2rem;
+  max-width: 640px;
+  padding: 1rem 1.3rem;
+  rotate: -1deg;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.8rem;
+  background: var(--paper);
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  font: 400 clamp(1.1rem, 2.2vw, 1.5rem) var(--font-display);
+}
+.finder select,
+.finder input {
+  font: inherit;
+  color: var(--terracotta);
+  background: transparent;
+  border: 0;
+  border-bottom: 3px dashed var(--ink);
+  padding: 0.1rem 0.3rem;
+  outline: none;
+  width: auto;
+  max-width: 11ch;
+  cursor: pointer;
+}
+.finder input {
+  width: 9ch;
+  cursor: text;
+}
+.finder select:focus,
+.finder input:focus {
+  border-bottom-style: solid;
+  border-bottom-color: var(--orange);
+}
+
+.cluster {
+  position: relative;
+  min-height: 440px;
+}
+.cluster .clusterTag {
+  position: absolute;
+  width: 210px;
+  animation: bob 7s ease-in-out infinite;
+  animation-delay: var(--d, 0s);
+}
+@keyframes bob {
+  50% {
+    translate: 0 -14px;
+  }
+}
+.pop {
+  z-index: 5;
+}
+
+/* Hidden until Hero.tsx reveals them. Only when scripting is on and motion is allowed. */
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  .intro {
+    opacity: 0;
+  }
+}
+
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  .cluster {
+    min-height: 360px;
+  }
+}

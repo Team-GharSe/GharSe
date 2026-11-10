@@ -1,16 +1,16 @@
 :root {
   /* palette: 60 cream/sand, 30 orange/terracotta, 10 teal/ink */
-  --cream: #F7EBD7;
-  --sand: #EFD9B8;
-  --paper: #FFF8E8;
-  --orange: #E2761F;
-  --terracotta: #C5684F;
-  --teal: #1F5C4E;
-  --ink: #2A1E16;
-  --butter: #F5C84B;
-  --chilli: #C93D26;
-  --sage: #BFD8C8;
-  --peach: #F6C79B;
+  --cream: #f7ebd7;
+  --sand: #efd9b8;
+  --paper: #fff8e8;
+  --orange: #e2761f;
+  --terracotta: #c5684f;
+  --teal: #1f5c4e;
+  --ink: #2a1e16;
+  --butter: #f5c84b;
+  --chilli: #c93d26;
+  --sage: #bfd8c8;
+  --peach: #f6c79b;
 
   /* type */
   --font-display: var(--f-display), "Rubik", system-ui, sans-serif;
