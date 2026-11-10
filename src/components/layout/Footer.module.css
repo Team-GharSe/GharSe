@@ -5,6 +5,15 @@
   overflow: hidden;
 }
 
+/* Fixed footer reveal positioning for desktop */
+:global(body.footer-reveal) .footer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+}
+
 .grid {
   display: grid;
   grid-template-columns: 2fr 1fr 1fr 1fr;

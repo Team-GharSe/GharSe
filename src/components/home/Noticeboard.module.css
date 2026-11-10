@@ -1,0 +1,71 @@
+.board {
+  position: relative;
+  padding: 6rem 0 7rem;
+}
+
+.board::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image: radial-gradient(
+    rgba(42, 30, 22, 0.13) 1.6px,
+    transparent 1.7px
+  );
+  background-size: 22px 22px;
+}
+
+.inner {
+  position: relative;
+  z-index: 1;
+}
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  gap: 2.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 3.5rem;
+}
+
+.noteTitle {
+  position: relative;
+  max-width: 440px;
+  padding: 1.3rem 1.7rem;
+  background: var(--butter);
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  box-shadow: var(--shadow);
+  rotate: -2deg;
+}
+
+.noteTitle::before {
+  content: "";
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  width: 90px;
+  height: 26px;
+  margin-left: -45px;
+  background: rgba(255, 248, 232, 0.7);
+  border: 1.5px solid rgba(42, 30, 22, 0.3);
+  rotate: -3deg;
+}
+
+.aside {
+  align-self: flex-end;
+  max-width: 22ch;
+  color: var(--terracotta);
+  rotate: 2deg;
+}
+
+.tags {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+  align-items: start;
+}
+
+.moreWrap {
+  margin-top: 2.5rem;
+}
