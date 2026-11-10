@@ -14,7 +14,6 @@ type ShelfItem = {
   vars: CSSVars;
 };
 
-// Placeholder shapes stand in for the illustrations. Category links map to real ids later.
 const TOP: ShelfItem[] = [
   {
     label: "bakes",
@@ -122,22 +121,22 @@ export default function Shelf() {
   useGSAP(() => {
     if (prefersReducedMotion()) return;
 
-    // dir 1: items start off-screen right and slide left. dir -1: start off-screen left and slide right.
     const slideIn = (row: HTMLElement | null, dir: 1 | -1) => {
       if (!row) return;
       const items = gsap.utils.toArray<HTMLElement>(`.${styles.thing}`, row);
+
       gsap.from(items, {
-        x: () => dir * window.innerWidth,
-        duration: 1.3,
+        x: dir * 350,
+        opacity: 0,
+        duration: 1.1,
         ease: "power3.out",
-        // the item that travels furthest leads, so the row arrives like a train
-        stagger: { each: 0.14, from: dir === 1 ? "start" : "end" },
-        scrollTrigger: { trigger: row, start: "top 80%", once: true },
+        stagger: { each: 0.1, from: dir === -1 ? "start" : "end" },
+        scrollTrigger: { trigger: row, start: "top 85%", once: true },
       });
     };
 
-    slideIn(topRow.current, 1);
-    slideIn(bottomRow.current, -1);
+    slideIn(topRow.current, -1); // Top row slides in from left (-1) to rest on the right
+    slideIn(bottomRow.current, 1); // Bottom row slides in from right (1) to rest on the left
   });
 
   return (
@@ -149,10 +148,12 @@ export default function Shelf() {
             (tap anything on the shelf)
           </span>
         </div>
-        <div ref={topRow} className={styles.row}>
+        {/* Top row: right aligned */}
+        <div ref={topRow} className={cx(styles.row, styles.rowEnd)}>
           {TOP.map(renderItem)}
         </div>
-        <div ref={bottomRow} className={cx(styles.row, styles.rowEnd)}>
+        {/* Bottom row: left aligned */}
+        <div ref={bottomRow} className={styles.row}>
           {BOTTOM.map(renderItem)}
         </div>
       </div>
