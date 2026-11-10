@@ -1,6 +1,6 @@
 .shelf {
   padding: 3rem 0 6rem;
-  background: var(--sand);
+  /*background: var(--sand);*/
   overflow-x: clip;
 }
 .intro {

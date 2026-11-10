@@ -12,6 +12,7 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Theme variables driven by data-theme attribute on body */
 body {
   --bg: var(--cream);
   --fg: var(--ink);
@@ -21,7 +22,29 @@ body {
   background: var(--bg);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+
+  /* This transition creates the 0.7s smooth color blend */
   transition: background-color 0.7s ease, color 0.7s ease;
+}
+
+/* Update background color when data-theme changes */
+body[data-theme="sand"] {
+  --bg: var(--sand);
+}
+body[data-theme="cream"] {
+  --bg: var(--cream);
+}
+body[data-theme="teal"] {
+  --bg: var(--teal);
+  --fg: var(--cream);
+}
+
+/* Ensure the wrapper container matches body background smoothly */
+.page {
+  position: relative;
+  z-index: 2;
+  background: var(--bg);
+  transition: background-color 0.7s ease;
 }
 
 /* Paper grain overlay */
